@@ -1,5 +1,7 @@
 import flet as ft
 from supabase import create_client
+from datetime import datetime
+
 
 # --- CONFIGURACIÓN ---
 URL = "https://bggzywzlusinkwwkwzgj.supabase.co"
