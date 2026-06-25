@@ -12,7 +12,8 @@ def main(page: ft.Page):
     page.padding = 20
     page.scroll = "adaptive"
 
-    # Campos con estilo (usando strings para los colores en lugar de ft.colors)
+    # Campos de entrada con diseño profesional
+    # Usamos colores como strings ("blue-900") para evitar errores de módulos
     def input_field(label):
         return ft.TextField(label=label, border_radius=10, bgcolor="blue-grey-50")
 
@@ -24,6 +25,7 @@ def main(page: ft.Page):
     f_constructora = input_field("Constructora")
     f_companero = input_field("Compañero")
 
+    # Tabla para el historial
     tabla = ft.DataTable(
         columns=[
             ft.DataColumn(ft.Text("Fecha", weight="bold")),
@@ -56,16 +58,16 @@ def main(page: ft.Page):
             "constructora": f_constructora.value, "companero": f_companero.value
         }
         supabase.table("datos_app").insert(datos).execute()
-        # Limpiar
+        # Limpiar campos después de guardar
         for f in [f_fecha, f_horas, f_metros, f_lugar, f_n_parte, f_constructora, f_companero]:
             f.value = ""
         cargar_datos()
 
-    # Layout Profesional
+    # Layout de la Interfaz
     page.add(
         ft.Container(
             content=ft.Column([
-                ft.Text("Registro de Trabajo", size=28, weight="w900", color="blue-900"),
+                ft.Text("Registro de Trabajo", size=28, weight="bold", color="blue-900"),
                 ft.Row([f_fecha, f_horas, f_metros]),
                 f_lugar,
                 ft.Row([f_n_parte, f_constructora, f_companero]),
