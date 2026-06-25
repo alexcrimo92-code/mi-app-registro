@@ -1,40 +1,65 @@
 import flet as ft
-# Asegúrate de tener los imports de supabase aquí
+from supabase import create_client, Client
+import os
+
+# --- CONFIGURACIÓN ---
+URL = "https://bggzywzlusinkwwkwzgj.supabase.co"
+KEY = "sb_publishable_0ItrpYbszHHSWy6gyzRR2A_2sGx6Sxx"
+
+# Inicializar Supabase aquí, fuera de las funciones
+supabase: Client = create_client(URL, KEY)
 
 def main(page: ft.Page):
     page.title = "App Taller"
-    
-    # Mensaje inicial para saber si la app arranca
-    lista = ft.ListView()
-    entrada = ft.TextField(hint_text="Escribe algo...")
-    
-    page.add(ft.Text("Iniciando aplicación..."), entrada, ft.ElevatedButton("Enviar", on_click=lambda e: enviar(e)), lista)
+    page.padding = 20
 
-    def cargar_datos():
+    # Componentes de la interfaz
+    lista = ft.ListView(expand=True, spacing=10)
+    entrada = ft.TextField(hint_text="Escribe algo...")
+
+    def cargar_datos(e=None):
         try:
-            # Quitamos el mensaje de iniciando
-            lista.controls.clear()
+            # Traer los datos de la nube
             response = supabase.table("datos_app").select("contenido").execute()
             
+            lista.controls.clear()
+            
             if not response.data:
-                lista.controls.append(ft.Text("La tabla está vacía en Supabase"))
+                lista.controls.append(ft.Text("La tabla está vacía."))
             else:
                 for item in response.data:
                     lista.controls.append(ft.Text(f"• {item['contenido']}"))
+            
             page.update()
         except Exception as e:
-            lista.controls.append(ft.Text(f"ERROR CRÍTICO: {str(e)}", color="red"))
+            lista.controls.append(ft.Text(f"Error al cargar: {str(e)}", color="red"))
             page.update()
 
     def enviar(e):
         try:
-            supabase.table("datos_app").insert({"contenido": entrada.value}).execute()
-            entrada.value = ""
-            cargar_datos()
+            if entrada.value:
+                # Guardar en la nube
+                supabase.table("datos_app").insert({"contenido": entrada.value}).execute()
+                entrada.value = ""
+                # Actualizar la lista inmediatamente después de guardar
+                cargar_datos()
         except Exception as e:
-            lista.controls.append(ft.Text(f"ERROR AL GUARDAR: {str(e)}", color="red"))
+            lista.controls.append(ft.Text(f"Error al guardar: {str(e)}", color="red"))
             page.update()
 
+    # Botón y estructura
+    boton_enviar = ft.ElevatedButton("Enviar", on_click=enviar)
+    
+    page.add(
+        ft.Text("Registro de datos", size=20, weight="bold"),
+        entrada,
+        boton_enviar,
+        ft.Divider(),
+        lista
+    )
+
+    # Cargar datos al iniciar
     cargar_datos()
 
+# Iniciar la aplicación
 ft.app(target=main, view=ft.AppView.WEB_BROWSER)
