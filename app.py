@@ -12,14 +12,14 @@ supabase = create_client(URL, KEY)
 
 
 def main(page: ft.Page):
-    page.title = "PARTES DE TRABAJO"
+    page.title = "Registro de Trabajo"
     page.theme_mode = ft.ThemeMode.LIGHT
-    page.bgcolor = "#F8F9FA" # Color de fondo suave
+    page.bgcolor = "#F8F9FA"
 
-    # --- CAMPOS ---
-    f_fecha = ft.TextField(label="Fecha", value="26/06/2026", icon=ft.icons.CALENDAR_MONTH)
+    # --- CAMPOS (Iconos corregidos a DATE_RANGE y LINEAR_SCALE) ---
+    f_fecha = ft.TextField(label="Fecha", value="26/06/2026", icon=ft.icons.DATE_RANGE)
     f_horas = ft.TextField(label="Horas trabajadas", icon=ft.icons.ACCESS_TIME, expand=True)
-    f_metros = ft.TextField(label="Metros instalados", icon=ft.icons.LINE_WEIGHT, expand=True)
+    f_metros = ft.TextField(label="Metros instalados", icon=ft.icons.LINEAR_SCALE, expand=True)
     f_lugar = ft.TextField(label="Lugar", icon=ft.icons.LOCATION_ON)
     f_n_parte = ft.TextField(label="Nº Parte", icon=ft.icons.TAG, expand=True)
     f_constructora = ft.TextField(label="Constructora", icon=ft.icons.BUSINESS, expand=True)
@@ -32,33 +32,39 @@ def main(page: ft.Page):
     )
 
     def cargar_datos(e=None):
-        response = supabase.table("datos_app").select("*").execute()
-        tabla.rows.clear()
-        for i in response.data:
-            tabla.rows.append(ft.DataRow(cells=[
-                ft.DataCell(ft.Text(i.get("lugar", ""))),
-                ft.DataCell(ft.Text(f"{i.get('horas', '')} horas")),
-                ft.DataCell(ft.Text(i.get("metros", ""))),
-            ]))
-        page.update()
+        try:
+            response = supabase.table("datos_app").select("*").execute()
+            tabla.rows.clear()
+            for i in response.data:
+                tabla.rows.append(ft.DataRow(cells=[
+                    ft.DataCell(ft.Text(i.get("lugar", ""))),
+                    ft.DataCell(ft.Text(f"{i.get('horas', '')} horas")),
+                    ft.DataCell(ft.Text(i.get("metros", ""))),
+                ]))
+            page.update()
+        except Exception as e:
+            print(f"Error: {e}")
 
     def guardar(e):
-        datos = {
-            "fecha": f_fecha.value, "horas": f_horas.value, "metros": f_metros.value,
-            "lugar": f_lugar.value, "n_parte": f_n_parte.value, "constructora": f_constructora.value,
-            "companero": f_companero.value
-        }
-        supabase.table("datos_app").insert(datos).execute()
-        cargar_datos()
+        try:
+            datos = {
+                "fecha": f_fecha.value, "horas": f_horas.value, "metros": f_metros.value,
+                "lugar": f_lugar.value, "n_parte": f_n_parte.value, "constructora": f_constructora.value,
+                "companero": f_companero.value
+            }
+            supabase.table("datos_app").insert(datos).execute()
+            cargar_datos()
+        except Exception as e:
+            print(f"Error guardando: {e}")
 
-    # --- DISEÑO UI ---
+    # --- ESTRUCTURA VISUAL ---
     page.add(
+        # Cabecera azul
         ft.Container(
-            content=ft.Column([
-                ft.Text("Registro de Trabajo", size=24, weight="bold", color="white"),
-            ]),
+            content=ft.Text("Registro de Trabajo", size=24, weight="bold", color="white"),
             bgcolor="#003366", padding=20, border_radius=ft.border_radius.only(bottom_left=20, bottom_right=20)
         ),
+        # Formulario
         ft.Container(
             content=ft.Column([
                 f_fecha,
@@ -71,6 +77,7 @@ def main(page: ft.Page):
             ]),
             padding=20, bgcolor="white", border_radius=15
         ),
+        # Tabla
         ft.Container(
             content=ft.Column([
                 ft.Text("Partes registrados", size=18, weight="bold"),
