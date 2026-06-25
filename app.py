@@ -12,24 +12,22 @@ def main(page: ft.Page):
     page.padding = 20
     page.scroll = "adaptive"
 
-    # Campos con estilo profesional
-    def input_field(label):
-        return ft.TextField(label=label, border_radius=10, bgcolor="blue-grey-50")
+    # Campos de entrada
+    f_fecha = ft.TextField(label="Fecha", border_radius=10)
+    f_horas = ft.TextField(label="Horas", border_radius=10)
+    f_metros = ft.TextField(label="Metros", border_radius=10)
+    f_lugar = ft.TextField(label="Lugar", border_radius=10)
+    f_n_parte = ft.TextField(label="Nº Parte", border_radius=10)
+    f_constructora = ft.TextField(label="Constructora", border_radius=10)
+    f_companero = ft.TextField(label="Compañero", border_radius=10)
 
-    f_fecha = input_field("Fecha")
-    f_horas = input_field("Horas")
-    f_metros = input_field("Metros")
-    f_lugar = input_field("Lugar")
-    f_n_parte = input_field("Nº Parte")
-    f_constructora = input_field("Constructora")
-    f_companero = input_field("Compañero")
-
+    # Tabla
     tabla = ft.DataTable(
         columns=[
-            ft.DataColumn(ft.Text("Fecha", weight="bold")),
-            ft.DataColumn(ft.Text("Lugar", weight="bold")),
-            ft.DataColumn(ft.Text("Horas", weight="bold")),
-            ft.DataColumn(ft.Text("Metros", weight="bold")),
+            ft.DataColumn(ft.Text("Fecha")),
+            ft.DataColumn(ft.Text("Lugar")),
+            ft.DataColumn(ft.Text("Horas")),
+            ft.DataColumn(ft.Text("Metros")),
         ],
         rows=[]
     )
@@ -46,8 +44,8 @@ def main(page: ft.Page):
                 ]) for i in response.data
             ]
             page.update()
-        except Exception as e:
-            print(f"Error al cargar: {e}")
+        except:
+            pass
 
     def guardar(e):
         datos = {
@@ -56,29 +54,20 @@ def main(page: ft.Page):
             "constructora": f_constructora.value, "companero": f_companero.value
         }
         supabase.table("datos_app").insert(datos).execute()
-        # Limpiar campos
         for f in [f_fecha, f_horas, f_metros, f_lugar, f_n_parte, f_constructora, f_companero]:
             f.value = ""
         cargar_datos()
 
-    # Layout corregido
+    # Layout usando texto simple para colores/iconos para evitar errores de atributos
     page.add(
-        ft.Container(
-            content=ft.Column([
-                ft.Text("Registro de Trabajo", size=28, weight="bold", color="blue-900"),
-                ft.Row([f_fecha, f_horas, f_metros]),
-                f_lugar,
-                ft.Row([f_n_parte, f_constructora, f_companero]),
-                # CAMBIADO: ft.icons.SAVE_ALT por ft.icons.SAVE
-                ft.ElevatedButton("GUARDAR PARTE", icon=ft.icons.SAVE, on_click=guardar, bgcolor="blue-700", color="white"),
-            ]),
-            padding=20,
-            border=ft.border.all(1, "blue-100"),
-            border_radius=15
-        ),
-        ft.Divider(height=40),
-        ft.Text("Historial de Partes", size=20, weight="bold"),
-        ft.Container(content=tabla, border=ft.border.all(1, "grey-300"), border_radius=10)
+        ft.Column([
+            ft.Text("Registro de Trabajo", size=25, weight="bold"),
+            f_fecha, f_horas, f_metros, f_lugar, f_n_parte, f_constructora, f_companero,
+            ft.ElevatedButton("GUARDAR PARTE", icon="save", on_click=guardar)
+        ]),
+        ft.Divider(),
+        ft.Text("Historial"),
+        tabla
     )
     cargar_datos()
 
