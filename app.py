@@ -12,9 +12,9 @@ def main(page: ft.Page):
     page.padding = 20
     page.scroll = "adaptive"
 
-    # Campos con estilo
+    # Campos con estilo (usando strings para los colores en lugar de ft.colors)
     def input_field(label):
-        return ft.TextField(label=label, border_radius=10, bgcolor=ft.colors.BLUE_GREY_50)
+        return ft.TextField(label=label, border_radius=10, bgcolor="blue-grey-50")
 
     f_fecha = input_field("Fecha")
     f_horas = input_field("Horas")
@@ -34,6 +34,21 @@ def main(page: ft.Page):
         rows=[]
     )
 
+    def cargar_datos(e=None):
+        try:
+            response = supabase.table("datos_app").select("*").execute()
+            tabla.rows = [
+                ft.DataRow(cells=[
+                    ft.DataCell(ft.Text(str(i.get("fecha", "")))),
+                    ft.DataCell(ft.Text(str(i.get("lugar", "")))),
+                    ft.DataCell(ft.Text(str(i.get("horas", "")))),
+                    ft.DataCell(ft.Text(str(i.get("metros", "")))),
+                ]) for i in response.data
+            ]
+            page.update()
+        except Exception as e:
+            print(f"Error al cargar: {e}")
+
     def guardar(e):
         datos = {
             "fecha": f_fecha.value, "horas": f_horas.value, "metros": f_metros.value,
@@ -46,35 +61,23 @@ def main(page: ft.Page):
             f.value = ""
         cargar_datos()
 
-    def cargar_datos(e=None):
-        response = supabase.table("datos_app").select("*").execute()
-        tabla.rows = [
-            ft.DataRow(cells=[
-                ft.DataCell(ft.Text(i.get("fecha"))),
-                ft.DataCell(ft.Text(i.get("lugar"))),
-                ft.DataCell(ft.Text(i.get("horas"))),
-                ft.DataCell(ft.Text(i.get("metros"))),
-            ]) for i in response.data
-        ]
-        page.update()
-
     # Layout Profesional
     page.add(
         ft.Container(
             content=ft.Column([
-                ft.Text("Registro de Trabajo", size=28, weight="w900", color=ft.colors.BLUE_900),
+                ft.Text("Registro de Trabajo", size=28, weight="w900", color="blue-900"),
                 ft.Row([f_fecha, f_horas, f_metros]),
                 f_lugar,
                 ft.Row([f_n_parte, f_constructora, f_companero]),
-                ft.ElevatedButton("GUARDAR PARTE", icon=ft.icons.SAVE_ALT, on_click=guardar, bgcolor=ft.colors.BLUE_700, color="white"),
+                ft.ElevatedButton("GUARDAR PARTE", icon=ft.icons.SAVE_ALT, on_click=guardar, bgcolor="blue-700", color="white"),
             ]),
             padding=20,
-            border=ft.border.all(1, ft.colors.BLUE_100),
+            border=ft.border.all(1, "blue-100"),
             border_radius=15
         ),
         ft.Divider(height=40),
         ft.Text("Historial de Partes", size=20, weight="bold"),
-        ft.Container(content=tabla, border=ft.border.all(1, ft.colors.GREY_300), border_radius=10)
+        ft.Container(content=tabla, border=ft.border.all(1, "grey-300"), border_radius=10)
     )
     cargar_datos()
 
