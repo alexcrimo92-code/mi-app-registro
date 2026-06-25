@@ -16,15 +16,25 @@ def main(page: ft.Page):
     lista = ft.Column()
 
     def cargar_datos():
-        # Traer los datos de la nube
-        try:
+    try:
+            # Intentamos traer los datos
             response = supabase.table("datos_app").select("contenido").execute()
+            
             lista.controls.clear()
-            for item in response.data:
-                lista.controls.append(ft.Text(f"• {item['contenido']}"))
+            
+            # Verificamos si response.data tiene contenido
+            if not response.data:
+                lista.controls.append(ft.Text("La tabla está vacía."))
+            else:
+                for item in response.data:
+                    lista.controls.append(ft.Text(f"• {item['contenido']}"))
+            
             page.update()
+            
         except Exception as e:
-            print(f"Error al cargar: {e}")
+            # Esto mostrará el error en tu app móvil/PC si algo falla
+            lista.controls.append(ft.Text(f"Error técnico: {str(e)}", color="red"))
+            page.update()
 
 
 def enviar(e):
