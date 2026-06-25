@@ -11,7 +11,7 @@ def main(page: ft.Page):
     page.theme_mode = ft.ThemeMode.LIGHT
     page.bgcolor = "#F8F9FA"
 
-    # --- CAMPOS (Usando strings para evitar errores de versión) ---
+    # --- CAMPOS (Usando strings para total compatibilidad) ---
     f_fecha = ft.TextField(label="Fecha", value="26/06/2026", icon="calendar_today")
     f_horas = ft.TextField(label="Horas trabajadas", icon="access_time", expand=True)
     f_metros = ft.TextField(label="Metros instalados", icon="reorder", expand=True)
@@ -56,7 +56,7 @@ def main(page: ft.Page):
                 "companero": f_companero.value
             }
             supabase.table("datos_app").insert(datos).execute()
-            # Limpiar campos
+            # Limpiar campos después de guardar
             for f in [f_horas, f_metros, f_lugar, f_n_parte, f_constructora, f_companero]:
                 f.value = ""
             cargar_datos()
