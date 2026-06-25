@@ -12,8 +12,7 @@ def main(page: ft.Page):
     page.padding = 20
     page.scroll = "adaptive"
 
-    # Campos de entrada con diseño profesional
-    # Usamos colores como strings ("blue-900") para evitar errores de módulos
+    # Campos con estilo profesional
     def input_field(label):
         return ft.TextField(label=label, border_radius=10, bgcolor="blue-grey-50")
 
@@ -25,7 +24,6 @@ def main(page: ft.Page):
     f_constructora = input_field("Constructora")
     f_companero = input_field("Compañero")
 
-    # Tabla para el historial
     tabla = ft.DataTable(
         columns=[
             ft.DataColumn(ft.Text("Fecha", weight="bold")),
@@ -58,12 +56,12 @@ def main(page: ft.Page):
             "constructora": f_constructora.value, "companero": f_companero.value
         }
         supabase.table("datos_app").insert(datos).execute()
-        # Limpiar campos después de guardar
+        # Limpiar campos
         for f in [f_fecha, f_horas, f_metros, f_lugar, f_n_parte, f_constructora, f_companero]:
             f.value = ""
         cargar_datos()
 
-    # Layout de la Interfaz
+    # Layout corregido
     page.add(
         ft.Container(
             content=ft.Column([
@@ -71,7 +69,8 @@ def main(page: ft.Page):
                 ft.Row([f_fecha, f_horas, f_metros]),
                 f_lugar,
                 ft.Row([f_n_parte, f_constructora, f_companero]),
-                ft.ElevatedButton("GUARDAR PARTE", icon=ft.icons.SAVE_ALT, on_click=guardar, bgcolor="blue-700", color="white"),
+                # CAMBIADO: ft.icons.SAVE_ALT por ft.icons.SAVE
+                ft.ElevatedButton("GUARDAR PARTE", icon=ft.icons.SAVE, on_click=guardar, bgcolor="blue-700", color="white"),
             ]),
             padding=20,
             border=ft.border.all(1, "blue-100"),
