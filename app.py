@@ -11,14 +11,14 @@ def main(page: ft.Page):
     page.theme_mode = ft.ThemeMode.LIGHT
     page.bgcolor = "#F8F9FA"
 
-    # --- CAMPOS (Iconos universales y compatibles) ---
-    f_fecha = ft.TextField(label="Fecha", value="26/06/2026", icon=ft.icons.DATE_RANGE)
-    f_horas = ft.TextField(label="Horas trabajadas", icon=ft.icons.ACCESS_TIME, expand=True)
-    f_metros = ft.TextField(label="Metros instalados", icon=ft.icons.REORDER, expand=True)
-    f_lugar = ft.TextField(label="Lugar", icon=ft.icons.LOCATION_ON)
-    f_n_parte = ft.TextField(label="Nº Parte", icon=ft.icons.TAG, expand=True)
-    f_constructora = ft.TextField(label="Constructora", icon=ft.icons.BUSINESS, expand=True)
-    f_companero = ft.TextField(label="Compañero", icon=ft.icons.PERSON)
+    # --- CAMPOS (Usando strings para evitar errores de versión) ---
+    f_fecha = ft.TextField(label="Fecha", value="26/06/2026", icon="calendar_today")
+    f_horas = ft.TextField(label="Horas trabajadas", icon="access_time", expand=True)
+    f_metros = ft.TextField(label="Metros instalados", icon="reorder", expand=True)
+    f_lugar = ft.TextField(label="Lugar", icon="location_on")
+    f_n_parte = ft.TextField(label="Nº Parte", icon="tag", expand=True)
+    f_constructora = ft.TextField(label="Constructora", icon="business", expand=True)
+    f_companero = ft.TextField(label="Compañero", icon="person")
 
     # --- TABLA ---
     tabla = ft.DataTable(
@@ -41,8 +41,8 @@ def main(page: ft.Page):
                     ft.DataCell(ft.Text(i.get("metros", ""))),
                 ]))
             page.update()
-        except Exception as e:
-            print(f"Error cargando: {e}")
+        except:
+            pass
 
     def guardar(e):
         try:
@@ -60,8 +60,8 @@ def main(page: ft.Page):
             for f in [f_horas, f_metros, f_lugar, f_n_parte, f_constructora, f_companero]:
                 f.value = ""
             cargar_datos()
-        except Exception as e:
-            print(f"Error guardando: {e}")
+        except:
+            pass
 
     # --- DISEÑO UI ---
     page.add(
@@ -76,7 +76,7 @@ def main(page: ft.Page):
                 f_lugar,
                 ft.Row([f_n_parte, f_constructora]),
                 f_companero,
-                ft.ElevatedButton("GUARDAR PARTE", icon=ft.icons.SAVE, on_click=guardar, 
+                ft.ElevatedButton("GUARDAR PARTE", icon="save", on_click=guardar, 
                                  style=ft.ButtonStyle(bgcolor="#0D47A1", color="white"))
             ]),
             padding=20, bgcolor="white", border_radius=15
@@ -91,4 +91,5 @@ def main(page: ft.Page):
     )
     cargar_datos()
 
-ft.app(target=main)
+if __name__ == "__main__":
+    ft.app(target=main)
