@@ -7,69 +7,74 @@ KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJn
 supabase = create_client(URL, KEY)
 
 def main(page: ft.Page):
-    page.title = "Registro de Partes"
+    page.title = "Sistema de Partes"
+    page.theme_mode = ft.ThemeMode.LIGHT
+    page.padding = 20
     page.scroll = "adaptive"
 
-    # Campos de entrada
-    f_fecha = ft.TextField(label="Fecha")
-    f_horas = ft.TextField(label="Horas")
-    f_metros = ft.TextField(label="Metros")
-    f_lugar = ft.TextField(label="Lugar")
-    f_n_parte = ft.TextField(label="Nº Parte")
-    f_constructora = ft.TextField(label="Constructora")
-    f_companero = ft.TextField(label="Compañero")
+    # Campos con estilo
+    def input_field(label):
+        return ft.TextField(label=label, border_radius=10, bgcolor=ft.colors.BLUE_GREY_50)
+
+    f_fecha = input_field("Fecha")
+    f_horas = input_field("Horas")
+    f_metros = input_field("Metros")
+    f_lugar = input_field("Lugar")
+    f_n_parte = input_field("Nº Parte")
+    f_constructora = input_field("Constructora")
+    f_companero = input_field("Compañero")
 
     tabla = ft.DataTable(
         columns=[
-            ft.DataColumn(ft.Text("Fecha")),
-            ft.DataColumn(ft.Text("Lugar")),
-            ft.DataColumn(ft.Text("Horas")),
-            ft.DataColumn(ft.Text("Metros")),
+            ft.DataColumn(ft.Text("Fecha", weight="bold")),
+            ft.DataColumn(ft.Text("Lugar", weight="bold")),
+            ft.DataColumn(ft.Text("Horas", weight="bold")),
+            ft.DataColumn(ft.Text("Metros", weight="bold")),
         ],
         rows=[]
     )
 
-    def cargar_datos(e=None):
-        try:
-            # Seleccionamos * para traer todas las columnas nuevas
-            response = supabase.table("datos_app").select("*").execute()
-            tabla.rows.clear()
-            for item in response.data:
-                tabla.rows.append(ft.DataRow(cells=[
-                    ft.DataCell(ft.Text(str(item.get("fecha", "-")))),
-                    ft.DataCell(ft.Text(str(item.get("lugar", "-")))),
-                    ft.DataCell(ft.Text(str(item.get("horas", "-")))),
-                    ft.DataCell(ft.Text(str(item.get("metros", "-")))),
-                ]))
-            page.update()
-        except Exception as e:
-            print(f"Error: {e}")
-
     def guardar(e):
-        try:
-            datos = {
-                "fecha": f_fecha.value,
-                "horas": f_horas.value,
-                "metros": f_metros.value,
-                "lugar": f_lugar.value,
-                "n_parte": f_n_parte.value,
-                "constructora": f_constructora.value,
-                "companero": f_companero.value
-            }
-            supabase.table("datos_app").insert(datos).execute()
-            # Limpiar campos
-            f_fecha.value = f_horas.value = f_metros.value = ""
-            f_lugar.value = f_n_parte.value = f_constructora.value = f_companero.value = ""
-            cargar_datos()
-        except Exception as e:
-            print(f"Error al guardar: {e}")
+        datos = {
+            "fecha": f_fecha.value, "horas": f_horas.value, "metros": f_metros.value,
+            "lugar": f_lugar.value, "n_parte": f_n_parte.value, 
+            "constructora": f_constructora.value, "companero": f_companero.value
+        }
+        supabase.table("datos_app").insert(datos).execute()
+        # Limpiar
+        for f in [f_fecha, f_horas, f_metros, f_lugar, f_n_parte, f_constructora, f_companero]:
+            f.value = ""
+        cargar_datos()
 
+    def cargar_datos(e=None):
+        response = supabase.table("datos_app").select("*").execute()
+        tabla.rows = [
+            ft.DataRow(cells=[
+                ft.DataCell(ft.Text(i.get("fecha"))),
+                ft.DataCell(ft.Text(i.get("lugar"))),
+                ft.DataCell(ft.Text(i.get("horas"))),
+                ft.DataCell(ft.Text(i.get("metros"))),
+            ]) for i in response.data
+        ]
+        page.update()
+
+    # Layout Profesional
     page.add(
-        ft.Text("NUEVO PARTE", size=20, weight="bold"),
-        f_fecha, f_horas, f_metros, f_lugar, f_n_parte, f_constructora, f_companero,
-        ft.ElevatedButton("GUARDAR PARTE", on_click=guardar),
-        ft.Divider(),
-        tabla
+        ft.Container(
+            content=ft.Column([
+                ft.Text("Registro de Trabajo", size=28, weight="w900", color=ft.colors.BLUE_900),
+                ft.Row([f_fecha, f_horas, f_metros]),
+                f_lugar,
+                ft.Row([f_n_parte, f_constructora, f_companero]),
+                ft.ElevatedButton("GUARDAR PARTE", icon=ft.icons.SAVE_ALT, on_click=guardar, bgcolor=ft.colors.BLUE_700, color="white"),
+            ]),
+            padding=20,
+            border=ft.border.all(1, ft.colors.BLUE_100),
+            border_radius=15
+        ),
+        ft.Divider(height=40),
+        ft.Text("Historial de Partes", size=20, weight="bold"),
+        ft.Container(content=tabla, border=ft.border.all(1, ft.colors.GREY_300), border_radius=10)
     )
     cargar_datos()
 
