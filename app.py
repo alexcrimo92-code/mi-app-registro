@@ -62,7 +62,7 @@ def main(page: ft.Page):
         mostrar_inicio()
 
     def mostrar_historial(e):
-        page.clean()
+       page.clean()
         try:
             response = supabase.table("datos_app").select("*").execute()
             tarjetas = []
@@ -71,26 +71,34 @@ def main(page: ft.Page):
                     ft.Card(
                         content=ft.Container(
                             content=ft.Column([
+                                # Título centrado
                                 ft.ListTile(
                                     leading=ft.Icon("work"),
-                                    title=ft.Text(f"Nº Parte: {item.get('n_parte', 'N/A')}"),
-                                    subtitle=ft.Text(f"Fecha: {item.get('fecha', '')}"),
+                                    title=ft.Text(f"Nº Parte: {item.get('n_parte', 'N/A')}", text_align="center"),
+                                    subtitle=ft.Text(f"Fecha: {item.get('fecha', '')}", text_align="center"),
                                 ),
+                                # Contenido centrado
                                 ft.Container(
                                     content=ft.Column([
-                                        ft.Text(f"Constructora: {item.get('constructora', '')}"),
-                                        ft.Text(f"Lugar: {item.get('lugar', '')}"),
-                                        ft.Text(f"Horas: {item.get('horas', '')} | Metros: {item.get('metros', '')}"),
-                                        ft.Text(f"Compañero: {item.get('companero', '')}"),
-                                    ]),
+                                        ft.Text(f"Constructora: {item.get('constructora', '')}", text_align="center"),
+                                        ft.Text(f"Lugar: {item.get('lugar', '')}", text_align="center"),
+                                        ft.Text(f"Horas: {item.get('horas', '')} | Metros: {item.get('metros', '')}", text_align="center"),
+                                        ft.Text(f"Compañero: {item.get('companero', '')}", text_align="center"),
+                                    ], 
+                                    alignment=ft.MainAxisAlignment.CENTER, 
+                                    horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                                    spacing=5),
                                     padding=10
                                 )
-                            ])
+                            ], 
+                            alignment=ft.MainAxisAlignment.CENTER, 
+                            horizontal_alignment=ft.CrossAxisAlignment.CENTER),
+                            padding=10
                         )
                     )
                 )
         except Exception as ex:
-            tarjetas = [ft.Text(f"Error al cargar: {ex}")]
+            tarjetas = [ft.Text(f"Error: {ex}")]
 
         page.add(
             ft.Container(
