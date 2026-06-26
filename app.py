@@ -8,7 +8,6 @@ supabase = create_client(URL, KEY)
 
 
 
-
 def main(page: ft.Page):
     page.title = "PARTES DE TRABAJO"
     page.theme_mode = ft.ThemeMode.LIGHT
