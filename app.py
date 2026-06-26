@@ -18,27 +18,33 @@ def main(page: ft.Page):
 
     # --- FUNCIÓN: IR AL FORMULARIO ---
     def mostrar_formulario(e):
-        contenedor_principal.content = ft.Column([
-            ft.AppBar(title=ft.Text("Nuevo Parte"), bgcolor="blue", color="white", 
-                      leading=ft.IconButton("arrow_back", on_click=mostrar_inicio)),
-            ft.TextField(label="Fecha", value="26/06/2026"),
-            ft.TextField(label="Horas trabajadas"),
-            ft.TextField(label="Metros"),
-            ft.ElevatedButton("GUARDAR PARTE", icon="save")
-        ], padding=20)
+        contenedor_principal.content = ft.Container(
+            content=ft.Column([
+                ft.AppBar(title=ft.Text("Nuevo Parte"), bgcolor="blue", color="white", 
+                          leading=ft.IconButton("arrow_back", on_click=mostrar_inicio)),
+                ft.TextField(label="Fecha", value="26/06/2026"),
+                ft.TextField(label="Horas trabajadas"),
+                ft.TextField(label="Metros"),
+                ft.ElevatedButton("GUARDAR PARTE", icon="save")
+            ]),
+            padding=20 # El padding va aquí, en el contenedor
+        )
         page.update()
 
     # --- FUNCIÓN: IR AL INICIO ---
     def mostrar_inicio(e):
-        contenedor_principal.content = ft.Column([
-            ft.Text("Menú Principal", size=24, weight="bold"),
-            ft.ElevatedButton("NUEVO REGISTRO", icon="add", on_click=mostrar_formulario),
-            ft.ElevatedButton("VER HISTORIAL", icon="list")
-        ], alignment=ft.MainAxisAlignment.CENTER, horizontal_alignment=ft.CrossAxisAlignment.CENTER, padding=50)
+        contenedor_principal.content = ft.Container(
+            content=ft.Column([
+                ft.Text("Menú Principal", size=24, weight="bold"),
+                ft.ElevatedButton("NUEVO REGISTRO", icon="add", on_click=mostrar_formulario),
+                ft.ElevatedButton("VER HISTORIAL", icon="list")
+            ], alignment=ft.MainAxisAlignment.CENTER, horizontal_alignment=ft.CrossAxisAlignment.CENTER),
+            padding=50 # El padding va aquí
+        )
         page.update()
 
     # --- INICIO ---
     page.add(contenedor_principal)
-    mostrar_inicio(None) # Cargamos el inicio al abrir
+    mostrar_inicio(None)
 
 ft.app(target=main, view=ft.AppView.WEB_BROWSER)
