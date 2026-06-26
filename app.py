@@ -7,7 +7,6 @@ KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJn
 supabase = create_client(URL, KEY)
 
 
-
 def main(page: ft.Page):
     page.title = "Registro de Trabajo"
     page.theme_mode = ft.ThemeMode.LIGHT
@@ -30,27 +29,26 @@ def main(page: ft.Page):
             ft.Container(
                 content=ft.Column([
                     ft.Text("Bienvenido", size=24, weight="bold"),
-                    ft.Text("Resumen de Junio 2026", size=16),
-                    ft.ElevatedButton("NUEVO PARTE", icon=ft.icons.ADD, on_click=ir_a_formulario, width=200),
-                    ft.ElevatedButton("VER HISTORIAL", icon=ft.icons.LIST, width=200)
+                    ft.ElevatedButton("NUEVO PARTE", icon=ft.icons.ADD, on_click=ir_a_formulario),
+                    ft.ElevatedButton("VER HISTORIAL", icon=ft.icons.LIST)
                 ], alignment=ft.MainAxisAlignment.CENTER, horizontal_alignment=ft.CrossAxisAlignment.CENTER),
                 padding=20
             )
         ]
     )
 
-    # --- VISTA 2: FORMULARIO (Sin viáticos) ---
+    # --- VISTA 2: FORMULARIO ---
     f_fecha = ft.TextField(label="Fecha", value="26/06/2026")
     f_horas = ft.TextField(label="Horas trabajadas")
-    f_lugar = ft.TextField(label="Lugar")
     
     vista_formulario = ft.View(
         "/formulario",
         [
-            ft.AppBar(title=ft.Text("Nuevo Parte"), bgcolor=ft.colors.BLUE_900, color="white", leading=ft.IconButton(ft.icons.ARROW_BACK, on_click=volver_al_inicio)),
+            ft.AppBar(title=ft.Text("Nuevo Parte"), bgcolor=ft.colors.BLUE_900, color="white", 
+                      leading=ft.IconButton(ft.icons.ARROW_BACK, on_click=volver_al_inicio)),
             ft.Container(
                 content=ft.Column([
-                    f_fecha, f_horas, f_lugar,
+                    f_fecha, f_horas,
                     ft.ElevatedButton("GUARDAR PARTE", on_click=lambda e: print("Guardado"))
                 ]),
                 padding=20
@@ -61,4 +59,6 @@ def main(page: ft.Page):
     page.views.append(vista_inicio)
     page.update()
 
+# Para evitar el error, asegúrate de tener instalado flet actualizado: 
+# pip install flet --upgrade
 ft.app(target=main, view=ft.AppView.WEB_BROWSER)
