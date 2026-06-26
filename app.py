@@ -13,10 +13,10 @@ def main(page: ft.Page):
     page.theme_mode = ft.ThemeMode.LIGHT
     page.bgcolor = "#F8F9FA"
 
-    # --- CAMPOS DEL FORMULARIO ---
+    # Campos
     f_fecha = ft.TextField(label="Fecha", value="26/06/2026")
-    f_horas = ft.TextField(label="Horas trabajadas")
-    f_metros = ft.TextField(label="Metros instalados")
+    f_horas = ft.TextField(label="Horas")
+    f_metros = ft.TextField(label="Metros")
     f_lugar = ft.TextField(label="Lugar")
     f_n_parte = ft.TextField(label="Nº Parte")
     f_constructora = ft.TextField(label="Constructora")
@@ -24,31 +24,26 @@ def main(page: ft.Page):
 
     contenedor_principal = ft.Container()
 
-    # --- TABLA DE DATOS ---
-    tabla = ft.DataTable(columns=[
-        ft.DataColumn(ft.Text("Lugar")),
-        ft.DataColumn(ft.Text("Horas")),
-    ])
-
-    def cargar_datos(e=None):
-        response = supabase.table("datos_app").select("*").execute()
-        tabla.rows.clear()
-        for item in response.data:
-            tabla.rows.append(ft.DataRow(cells=[
-                ft.DataCell(ft.Text(item.get("lugar", ""))),
-                ft.DataCell(ft.Text(str(item.get("horas", "")))),
-            ]))
+    def mostrar_inicio(e=None):
+        contenedor_principal.content = ft.Container(
+            content=ft.Column([
+                ft.Text("Menú Principal", size=24, weight="bold"),
+                ft.ElevatedButton("NUEVO REGISTRO", icon="add", on_click=mostrar_formulario),
+                ft.ElevatedButton("VER HISTORIAL", icon="list", on_click=mostrar_historial)
+            ], alignment=ft.MainAxisAlignment.CENTER, horizontal_alignment=ft.CrossAxisAlignment.CENTER),
+            padding=50
+        )
         page.update()
 
-    # --- NAVEGACIÓN ---
     def mostrar_formulario(e):
         contenedor_principal.content = ft.Container(
             content=ft.Column([
                 ft.AppBar(title=ft.Text("Nuevo Parte"), bgcolor="blue", color="white", 
                           leading=ft.IconButton("arrow_back", on_click=mostrar_inicio)),
                 f_fecha, f_horas, f_metros, f_lugar, f_n_parte, f_constructora, f_companero,
-                ft.ElevatedButton("GUARDAR PARTE", icon="save", on_click=guardar_y_volver)
-            ]),
+                ft.ElevatedButton("GUARDAR PARTE", icon="save", on_click=guardar_y_volver),
+                ft.OutlinedButton("CANCELAR / VOLVER", icon="close", on_click=mostrar_inicio) # <-- BOTÓN DE REGRESO
+            ], scroll=ft.ScrollMode.AUTO), # Permite scroll si el form es largo
             padding=20
         )
         page.update()
@@ -60,32 +55,43 @@ def main(page: ft.Page):
             "constructora": f_constructora.value, "companero": f_companero.value
         }
         supabase.table("datos_app").insert(datos).execute()
-        mostrar_inicio(None)
+        mostrar_inicio()
 
     def mostrar_historial(e):
-        cargar_datos()
+        # Obtener datos
+        response = supabase.table("datos_app").select("*").execute()
+        
+        filas = []
+        for item in response.data:
+            filas.append(ft.DataRow(cells=[
+                ft.DataCell(ft.Text(item.get("fecha", ""))),
+                ft.DataCell(ft.Text(item.get("lugar", ""))),
+                ft.DataCell(ft.Text(str(item.get("horas", ""))))
+            ]))
+
         contenedor_principal.content = ft.Container(
             content=ft.Column([
                 ft.AppBar(title=ft.Text("Historial"), bgcolor="blue", color="white", 
                           leading=ft.IconButton("arrow_back", on_click=mostrar_inicio)),
-                ft.ListView(controls=[tabla], expand=True)
-            ]),
+                ft.ElevatedButton("VOLVER AL MENÚ", icon="home", on_click=mostrar_inicio), # <-- BOTÓN DE REGRESO
+                ft.Divider(),
+                # Tabla con scroll horizontal automático
+                ft.Row([
+                    ft.DataTable(
+                        columns=[
+                            ft.DataColumn(ft.Text("Fecha")),
+                            ft.DataColumn(ft.Text("Lugar")),
+                            ft.DataColumn(ft.Text("Horas")),
+                        ],
+                        rows=filas
+                    )
+                ], scroll=ft.ScrollMode.AUTO)
+            ], scroll=ft.ScrollMode.AUTO),
             padding=20
         )
         page.update()
 
-    def mostrar_inicio(e):
-        contenedor_principal.content = ft.Container(
-            content=ft.Column([
-                ft.Text("Menú Principal", size=24, weight="bold"),
-                ft.ElevatedButton("NUEVO REGISTRO", icon="add", on_click=mostrar_formulario),
-                ft.ElevatedButton("VER HISTORIAL", icon="list", on_click=mostrar_historial)
-            ], alignment=ft.MainAxisAlignment.CENTER, horizontal_alignment=ft.CrossAxisAlignment.CENTER),
-            padding=50
-        )
-        page.update()
-
     page.add(contenedor_principal)
-    mostrar_inicio(None)
+    mostrar_inicio()
 
 ft.app(target=main, view=ft.AppView.WEB_BROWSER)
