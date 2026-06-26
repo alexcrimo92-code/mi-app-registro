@@ -10,27 +10,20 @@ supabase = create_client(URL, KEY)
 def main(page: ft.Page):
     page.title = "Registro de Trabajo"
     page.theme_mode = ft.ThemeMode.LIGHT
-    page.padding = 0
-
-    # --- FUNCIONES DE NAVEGACIÓN ---
+    
+    # --- VISTA 1: MENÚ DE INICIO ---
     def ir_a_formulario(e):
         page.views.append(vista_formulario)
         page.update()
 
-    def volver_al_inicio(e):
-        page.views.pop()
-        page.update()
-
-    # --- VISTA 1: MENÚ DE INICIO ---
     vista_inicio = ft.View(
         "/",
         [
-            ft.AppBar(title=ft.Text("Inicio"), bgcolor=ft.colors.BLUE_900, color="white"),
+            ft.AppBar(title=ft.Text("Inicio"), bgcolor="blue", color="white"),
             ft.Container(
                 content=ft.Column([
                     ft.Text("Bienvenido", size=24, weight="bold"),
                     ft.ElevatedButton("NUEVO PARTE", icon=ft.icons.ADD, on_click=ir_a_formulario),
-                    ft.ElevatedButton("VER HISTORIAL", icon=ft.icons.LIST)
                 ], alignment=ft.MainAxisAlignment.CENTER, horizontal_alignment=ft.CrossAxisAlignment.CENTER),
                 padding=20
             )
@@ -38,18 +31,20 @@ def main(page: ft.Page):
     )
 
     # --- VISTA 2: FORMULARIO ---
-    f_fecha = ft.TextField(label="Fecha", value="26/06/2026")
-    f_horas = ft.TextField(label="Horas trabajadas")
-    
+    def volver_al_inicio(e):
+        page.views.pop()
+        page.update()
+
     vista_formulario = ft.View(
         "/formulario",
         [
-            ft.AppBar(title=ft.Text("Nuevo Parte"), bgcolor=ft.colors.BLUE_900, color="white", 
+            ft.AppBar(title=ft.Text("Nuevo Parte"), bgcolor="blue", color="white", 
                       leading=ft.IconButton(ft.icons.ARROW_BACK, on_click=volver_al_inicio)),
             ft.Container(
                 content=ft.Column([
-                    f_fecha, f_horas,
-                    ft.ElevatedButton("GUARDAR PARTE", on_click=lambda e: print("Guardado"))
+                    ft.TextField(label="Fecha", value="26/06/2026"),
+                    ft.TextField(label="Horas trabajadas"),
+                    ft.ElevatedButton("GUARDAR PARTE")
                 ]),
                 padding=20
             )
@@ -59,6 +54,4 @@ def main(page: ft.Page):
     page.views.append(vista_inicio)
     page.update()
 
-# Para evitar el error, asegúrate de tener instalado flet actualizado: 
-# pip install flet --upgrade
 ft.app(target=main, view=ft.AppView.WEB_BROWSER)
