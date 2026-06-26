@@ -1,3 +1,4 @@
+import os
 import flet as ft
 from supabase import create_client
 
@@ -102,4 +103,8 @@ def main(page: ft.Page):
     page.add(contenedor_principal)
     mostrar_inicio()
 
-ft.app(target=main, view=ft.AppView.WEB_BROWSER)
+ft.app(
+    target=main, 
+    view=ft.AppView.WEB_BROWSER, 
+    port=int(os.environ.get("PORT", 8080))
+)
