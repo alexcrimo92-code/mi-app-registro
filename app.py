@@ -9,47 +9,46 @@ supabase = create_client(URL, KEY)
 
 
 def main(page: ft.Page):
-    page.title = "Registro"
+    page.title = "App Registro"
     page.theme_mode = ft.ThemeMode.LIGHT
-    page.bgcolor = "#F8F9FA"
+    page.bgcolor = "#FFFFFF" # Fondo blanco limpio
 
-    # Contenedor central
-    view_container = ft.Container(expand=True, padding=10)
-
+    # Contenedor que hará de "pantalla"
+    contenedor_pantalla = ft.Container(padding=20)
+    
     def mostrar_menu():
-        view_container.content = ft.Column([
+        contenedor_pantalla.content = ft.Column([
             ft.Text("Menú Principal", size=24, weight="bold"),
-            ft.ElevatedButton("NUEVO REGISTRO", icon="ADD", on_click=lambda e: mostrar_formulario()),
-            ft.ElevatedButton("VER HISTORIAL", icon="LIST", on_click=lambda e: mostrar_historial())
-        ], alignment=ft.MainAxisAlignment.CENTER, horizontal_alignment=ft.CrossAxisAlignment.CENTER)
+            ft.ElevatedButton("NUEVO REGISTRO", on_click=lambda _: mostrar_formulario()),
+            ft.ElevatedButton("VER HISTORIAL", on_click=lambda _: mostrar_historial())
+        ], horizontal_alignment=ft.CrossAxisAlignment.CENTER)
         page.update()
 
     def mostrar_formulario():
-        view_container.content = ft.Column([
-            ft.IconButton(icon="ARROW_BACK", icon_color="blue", on_click=lambda e: mostrar_menu()),
+        contenedor_pantalla.content = ft.Column([
+            # Usamos un botón con texto en lugar de solo icono para evitar el error rojo
+            ft.TextButton("← Volver", on_click=lambda _: mostrar_menu()),
             ft.Text("Nuevo Registro", size=20, weight="bold"),
             ft.TextField(label="Fecha", value="26/06/2026"),
             ft.TextField(label="Horas"),
             ft.TextField(label="Lugar"),
-            ft.ElevatedButton("GUARDAR", icon="SAVE", on_click=lambda e: mostrar_menu())
+            ft.ElevatedButton("GUARDAR", on_click=lambda _: mostrar_menu())
         ])
         page.update()
 
     def mostrar_historial():
-        # Simulamos carga de datos para asegurar estructura
-        cards = [
-            ft.Card(content=ft.Container(content=ft.Text("PARTE: 861 | Gamiz", weight="bold"), padding=15)),
-            ft.Card(content=ft.Container(content=ft.Text("PARTE: 862 | Meco", weight="bold"), padding=15))
-        ]
+        # Simulamos datos para probar que la lista no se rompa
+        items = ["Parte 861 - Gamiz", "Parte 862 - Meco"]
+        controles = [ft.Card(content=ft.Container(content=ft.Text(i), padding=20)) for i in items]
         
-        view_container.content = ft.Column([
-            ft.IconButton(icon="ARROW_BACK", icon_color="blue", on_click=lambda e: mostrar_menu()),
-            ft.Text("Historial de Partes", size=20, weight="bold"),
-            ft.ListView(controls=cards, expand=True, spacing=10)
-        ], expand=True)
+        contenedor_pantalla.content = ft.Column([
+            ft.TextButton("← Volver", on_click=lambda _: mostrar_menu()),
+            ft.Text("Historial", size=20, weight="bold"),
+            ft.Column(controls=controles)
+        ])
         page.update()
 
-    page.add(view_container)
+    page.add(contenedor_pantalla)
     mostrar_menu()
 
-ft.app(target=main, view=ft.AppView.WEB_BROWSER, port=int(os.environ.get("PORT", 8080)))
+ft.app(target=main, view=ft.AppView.WEB_BROWSER, port=int(os.environ.get("PORT", 8080)))80)))
