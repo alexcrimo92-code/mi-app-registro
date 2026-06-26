@@ -7,22 +7,24 @@ KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJn
 supabase = create_client(URL, KEY)
 
 
-def main(page: ft.Page):
-    page.title = "Registro de Trabajo"
-    page.theme_mode = ft.ThemeMode.LIGHT
-    page.bgcolor = "#E3F2FD" # Color de fondo suave
-    page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
-    page.scroll = ft.ScrollMode.AUTO
 
-    # Dropdown sin 'icon' (que causaba error)
+
+def main(page: ft.Page):
+    page.title = "PARTES DE TRABAJO"
+    page.theme_mode = ft.ThemeMode.LIGHT
+    page.bgcolor = "#E3F2FD" 
+    page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
+
+    # Usamos iconos como string (ej: "save") en lugar de ft.icons.SAVE
+    f_fecha = ft.TextField(label="Fecha", value="26/06/2026", icon="date_range", width=300)
+    
+    # Menú desplegable para horas
     f_horas = ft.Dropdown(
         label="Horas trabajadas",
         options=[ft.dropdown.Option(str(i)) for i in range(1, 13)],
         width=300
     )
 
-    # Inputs con iconos como texto (strings) para evitar errores de versión
-    f_fecha = ft.TextField(label="Fecha", value="26/06/2026", icon="date_range", width=300)
     f_metros = ft.TextField(label="Metros instalados", icon="reorder", width=300)
     f_lugar = ft.TextField(label="Lugar", icon="location_on", width=300)
     f_n_parte = ft.TextField(label="Nº Parte", icon="tag", width=300)
@@ -34,8 +36,6 @@ def main(page: ft.Page):
             ft.DataColumn(ft.Text("Parte")),
             ft.DataColumn(ft.Text("Lugar")),
             ft.DataColumn(ft.Text("Horas")),
-            ft.DataColumn(ft.Text("Metros")),
-            ft.DataColumn(ft.Text("Constructora")),
         ],
         rows=[]
     )
@@ -49,8 +49,6 @@ def main(page: ft.Page):
                     ft.DataCell(ft.Text(str(i.get("n_parte", "")))),
                     ft.DataCell(ft.Text(i.get("lugar", ""))),
                     ft.DataCell(ft.Text(str(i.get("horas", "")))),
-                    ft.DataCell(ft.Text(str(i.get("metros", "")))),
-                    ft.DataCell(ft.Text(i.get("constructora", ""))),
                 ]))
             page.update()
         except:
@@ -67,11 +65,11 @@ def main(page: ft.Page):
         except:
             pass
 
-    # Diseño centrado y ordenado
+    # Diseño usando contenedores simples
     page.add(
         ft.Container(
             content=ft.Column([
-                ft.Text("Registro de Trabajo", size=30, weight="bold", color="#0D47A1"),
+                ft.Text("PARTES DE TRABAJO", size=30, weight="bold", color="#0D47A1"),
                 f_fecha, f_horas, f_metros, f_lugar, f_n_parte, f_constructora, f_companero,
                 ft.ElevatedButton("GUARDAR PARTE", icon="save", on_click=guardar, bgcolor="#1976D2", color="white")
             ], horizontal_alignment=ft.CrossAxisAlignment.CENTER),
@@ -80,7 +78,8 @@ def main(page: ft.Page):
         ft.Container(
             content=ft.Column([
                 ft.Text("Partes registrados", size=20, weight="bold"),
-                ft.SingleChildScrollView(content=tabla, scroll_direction=ft.ScrollAxis.HORIZONTAL)
+                # ScrollView simple que sí existe en todas las versiones
+                ft.ListView(content=tabla, height=200) 
             ]),
             bgcolor="white", padding=20, border_radius=20, margin=ft.margin.only(top=20)
         )
