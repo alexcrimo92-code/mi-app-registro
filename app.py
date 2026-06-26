@@ -73,40 +73,32 @@ def main(page: ft.Page):
                     ft.Card(
                         content=ft.Container(
                             content=ft.Column([
-                                ft.ListTile(
-                                    leading=ft.Icon("work"),
-                                    title=ft.Text(f"Nº Parte: {item.get('n_parte', 'N/A')}", text_align="center"),
-                                    subtitle=ft.Text(f"Fecha: {item.get('fecha', '')}", text_align="center"),
-                                ),
-                                ft.Container(
-                                    content=ft.Column([
-                                        ft.Text(f"Constructora: {item.get('constructora', '')}", text_align="center"),
-                                        ft.Text(f"Lugar: {item.get('lugar', '')}", text_align="center"),
-                                        ft.Text(f"Horas: {item.get('horas', '')} | Metros: {item.get('metros', '')}", text_align="center"),
-                                        ft.Text(f"Compañero: {item.get('companero', '')}", text_align="center"),
-                                    ], 
-                                    alignment=ft.MainAxisAlignment.CENTER, 
-                                    horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                                    spacing=5),
-                                    padding=10
-                                )
-                            ], alignment=ft.MainAxisAlignment.CENTER, horizontal_alignment=ft.CrossAxisAlignment.CENTER),
-                            padding=10
+                                ft.Text(f"PARTE Nº: {item.get('n_parte', 'N/A')}", size=20, weight="bold", color="blue"),
+                                ft.Text(f"Fecha: {item.get('fecha', '')}", size=14, color="grey"),
+                                ft.Divider(height=1, color="grey"),
+                                ft.Column([
+                                    ft.Text(f"🏢 {item.get('constructora', 'N/A')}", size=16),
+                                    ft.Text(f"📍 {item.get('lugar', 'N/A')}", size=16),
+                                    ft.Text(f"⏱ {item.get('horas', '0')} hrs | 📏 {item.get('metros', '0')} m", size=16, weight="w500"),
+                                    ft.Text(f"👥 {item.get('companero', 'N/A')}", size=16),
+                                ], spacing=8, horizontal_alignment=ft.CrossAxisAlignment.START),
+                            ], spacing=10, horizontal_alignment=ft.CrossAxisAlignment.CENTER),
+                            padding=20
                         )
                     )
                 )
         except Exception as ex:
-            tarjetas = [ft.Text(f"Error al cargar datos: {ex}")]
+            tarjetas = [ft.Text(f"Error: {ex}")]
 
         page.add(
             ft.Container(
                 content=ft.Column([
-                    ft.AppBar(title=ft.Text("Historial"), bgcolor="blue", color="white", 
+                    ft.AppBar(title=ft.Text("Historial de Partes"), bgcolor="blue", color="white", 
                               leading=ft.IconButton("arrow_back", on_click=mostrar_inicio)),
                     ft.ElevatedButton("VOLVER AL MENÚ", icon="home", on_click=mostrar_inicio),
-                    ft.ListView(controls=tarjetas, expand=True, spacing=10)
+                    ft.ListView(controls=tarjetas, expand=True, spacing=15)
                 ], expand=True),
-                padding=20,
+                padding=10,
                 expand=True
             )
         )
