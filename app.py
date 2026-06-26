@@ -15,18 +15,12 @@ def main(page: ft.Page):
 
     contenedor_pantalla = ft.Container(expand=True, padding=20)
 
-    # Función para botones con estilo (usando parámetros básicos)
-    def crear_boton_menu(texto, icono_nombre, funcion):
+    # Función para botones con estilo usando parámetros universales
+    def crear_boton_menu(texto_boton, funcion):
         return ft.Container(
             content=ft.ElevatedButton(
-                # Usamos una estructura simple de texto e icono para evitar errores de tipo
-                text=texto,
-                icon=icono_nombre, 
+                text=texto_boton,
                 on_click=funcion,
-                style=ft.ButtonStyle(
-                    padding=20,
-                    shape=ft.RoundedRectangleBorder(radius=15),
-                ),
             ),
             padding=5
         )
@@ -44,29 +38,29 @@ def main(page: ft.Page):
         horas, metros = obtener_totales()
         contenedor_pantalla.content = ft.Column([
             ft.Text("CONTROL DE OBRA", size=26, weight="bold"),
-            # Tarjeta de totales sin 'color' ni atributos complejos
+            # Contenedor para totales sin usar 'color' o argumentos complejos
             ft.Container(
                 content=ft.Row([
-                    ft.Column([ft.Text("Total Horas"), ft.Text(f"{horas}", size=22, weight="bold")]),
+                    ft.Column([ft.Text("Total Horas"), ft.Text(str(horas), size=22, weight="bold")]),
                     ft.VerticalDivider(),
-                    ft.Column([ft.Text("Total Metros"), ft.Text(f"{metros}", size=22, weight="bold")])
-                ], alignment="center"),
-                bgcolor="white", padding=20, border_radius=20
+                    ft.Column([ft.Text("Total Metros"), ft.Text(str(metros), size=22, weight="bold")])
+                ]),
+                bgcolor="white", padding=20
             ),
             ft.Container(height=20),
-            crear_boton_menu("NUEVO REGISTRO", "add", mostrar_formulario),
-            crear_boton_menu("VER HISTORIAL", "history", mostrar_historial)
-        ], alignment="center", horizontal_alignment="center")
+            crear_boton_menu("NUEVO REGISTRO", mostrar_formulario),
+            crear_boton_menu("VER HISTORIAL", mostrar_historial)
+        ])
         page.update()
 
     def mostrar_formulario(e):
         contenedor_pantalla.content = ft.Column([
-            ft.ElevatedButton("← Volver", icon="arrow_back", on_click=mostrar_menu),
+            ft.ElevatedButton("← Volver", on_click=mostrar_menu),
             ft.Text("Nuevo Registro", size=20, weight="bold"),
             ft.TextField(label="Fecha", value="26/06/2026"),
             ft.TextField(label="Horas"),
             ft.TextField(label="Metros"),
-            ft.ElevatedButton("GUARDAR", icon="save", on_click=mostrar_menu)
+            ft.ElevatedButton("GUARDAR", on_click=mostrar_menu)
         ])
         page.update()
 
@@ -74,18 +68,16 @@ def main(page: ft.Page):
         try:
             response = supabase.table("datos_app").select("*").execute()
             tarjetas = [ft.Card(content=ft.Container(padding=15, content=ft.Column([
-                ft.Text(f"PARTE: {item.get('n_parte', 'N/A')}", weight="bold"),
-                ft.Divider(),
-                ft.Text(f"🏢 {item.get('constructora', 'N/A')}"),
-                ft.Text(f"📍 {item.get('lugar', 'N/A')}"),
-                ft.Text(f"⏱ {item.get('horas', '0')} hrs | 📏 {item.get('metros', '0')} m"),
-                ft.Text(f"👥 {item.get('companero', 'N/A')}")
+                ft.Text("PARTE: " + str(item.get('n_parte', 'N/A')), weight="bold"),
+                ft.Text("🏢 " + str(item.get('constructora', 'N/A'))),
+                ft.Text("📍 " + str(item.get('lugar', 'N/A'))),
+                ft.Text("⏱ " + str(item.get('horas', '0')) + " hrs | 📏 " + str(item.get('metros', '0')) + " m")
             ]))) for item in response.data]
         except:
             tarjetas = [ft.Text("Error al cargar")]
 
         contenedor_pantalla.content = ft.Column([
-            ft.ElevatedButton("← Volver", icon="arrow_back", on_click=mostrar_menu),
+            ft.ElevatedButton("← Volver", on_click=mostrar_menu),
             ft.Text("Historial", size=20, weight="bold"),
             ft.ListView(controls=tarjetas, expand=True, spacing=10)
         ], expand=True)
