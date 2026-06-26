@@ -12,9 +12,10 @@ supabase = create_client(URL, KEY)
 def main(page: ft.Page):
     page.title = "App Registro"
     page.theme_mode = "light"
+    page.vertical_alignment = "center" # Centra verticalmente todo el contenido
     
-    # Contenedor principal
-    contenedor_pantalla = ft.Column()
+    # Usamos una columna principal con alineación centrada
+    contenedor_pantalla = ft.Column(alignment="center", horizontal_alignment="center")
     page.add(contenedor_pantalla)
 
     def obtener_totales():
@@ -31,22 +32,27 @@ def main(page: ft.Page):
         contenedor_pantalla.controls.clear()
         h, m = obtener_totales()
         
-        # Tarjeta de resumen
-        tarjeta_resumen = ft.Column([
-            ft.Text("📊 RESUMEN", weight="bold"),
-            ft.Text(f"⏱ Total Horas: {h}"),
-            ft.Text(f"📏 Total Metros: {m}")
-        ])
+        # Tarjeta moderna creada con Container
+        tarjeta_resumen = ft.Container(
+            content=ft.Column([
+                ft.Text("MENÚ PRINCIPAL", size=24, weight="bold"),
+                ft.Text(f"⏱ Total Horas: {h}"),
+                ft.Text(f"📏 Total Metros: {m}")
+            ], alignment="center", horizontal_alignment="center"),
+            padding=20,
+            border=ft.border.all(2, "blue"),
+            border_radius=15,
+            bgcolor="#f0f8ff"
+        )
         
         contenedor_pantalla.controls.extend([
-            ft.Text("MENÚ PRINCIPAL", size=24, weight="bold"),
             tarjeta_resumen,
             ft.ElevatedButton("➕ NUEVO REGISTRO", on_click=mostrar_formulario),
             ft.ElevatedButton("📋 VER HISTORIAL", on_click=mostrar_historial)
         ])
         page.update()
 
-    # Campos
+    # Campos de formulario
     f_fecha = ft.TextField(label="Fecha", value="26/06/2026")
     f_horas = ft.TextField(label="Horas")
     f_metros = ft.TextField(label="Metros")
@@ -58,14 +64,9 @@ def main(page: ft.Page):
 
     def guardar_registro(e):
         datos = {
-            "fecha": f_fecha.value, 
-            "horas": f_horas.value, 
-            "metros": f_metros.value, 
-            "material instalado": f_material.value,
-            "lugar": f_lugar.value, 
-            "n_parte": f_parte.value, 
-            "constructora": f_constr.value, 
-            "companero": f_comp.value
+            "fecha": f_fecha.value, "horas": f_horas.value, "metros": f_metros.value, 
+            "material instalado": f_material.value, "lugar": f_lugar.value, 
+            "n_parte": f_parte.value, "constructora": f_constr.value, "companero": f_comp.value
         }
         supabase.table("datos_app").insert(datos).execute()
         mostrar_menu()
@@ -87,15 +88,20 @@ def main(page: ft.Page):
         try:
             res = supabase.table("datos_app").select("*").execute()
             for item in res.data:
-                # Tarjeta visual con emojis
-                tarjeta = ft.Column([
-                    ft.Text(f"📅 {item.get('fecha')} | 🆔 {item.get('n_parte', 'N/A')}", weight="bold"),
-                    ft.Text(f"🏢 {item.get('constructora')} | 📍 {item.get('lugar')}"),
-                    ft.Text(f"🛠 {item.get('material instalado', 'N/A')}"),
-                    ft.Text(f"⏱ {item.get('horas')}h | 📏 {item.get('metros')}m | 👥 {item.get('companero')}")
-                ])
-                # Separador visual
-                contenedor_pantalla.controls.append(ft.Text("------------------------------"))
+                # Tarjeta moderna con bordes redondeados y fondo suave
+                tarjeta = ft.Container(
+                    content=ft.Column([
+                        ft.Text(f"📅 {item.get('fecha')} | 🆔 {item.get('n_parte', 'N/A')}", weight="bold"),
+                        ft.Text(f"🏢 {item.get('constructora')} | 📍 {item.get('lugar')}"),
+                        ft.Text(f"🛠 {item.get('material instalado', 'N/A')}"),
+                        ft.Text(f"⏱ {item.get('horas')}h | 📏 {item.get('metros')}m | 👥 {item.get('companero')}")
+                    ]),
+                    padding=15,
+                    border=ft.border.all(1, "#dcdcdc"),
+                    border_radius=10,
+                    margin=10,
+                    bgcolor="white"
+                )
                 contenedor_pantalla.controls.append(tarjeta)
         except Exception as err:
             contenedor_pantalla.controls.append(ft.Text(f"Error: {err}"))
