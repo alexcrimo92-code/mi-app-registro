@@ -66,7 +66,7 @@ def main(page: ft.Page):
                     content=ft.Container(
                         content=ft.Column([
                             ft.ListTile(
-                                leading=ft.Icon(ft.icons.WORK),
+                                leading=ft.Icon("work"), # CORREGIDO: Usar string "work"
                                 title=ft.Text(f"Nº Parte: {item.get('n_parte', 'N/A')}"),
                                 subtitle=ft.Text(f"Fecha: {item.get('fecha', '')}"),
                             ),
@@ -99,5 +99,4 @@ def main(page: ft.Page):
     page.add(contenedor_principal)
     mostrar_inicio()
 
-# Esta es la línea necesaria para que Render funcione
 ft.app(target=main, view=ft.AppView.WEB_BROWSER, port=int(os.environ.get("PORT", 8080)))
