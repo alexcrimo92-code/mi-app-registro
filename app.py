@@ -58,30 +58,38 @@ def main(page: ft.Page):
         mostrar_inicio()
 
     def mostrar_historial(e):
-        # Obtener datos
+        # Obtener datos de Supabase
         response = supabase.table("datos_app").select("*").execute()
         
         filas = []
         for item in response.data:
             filas.append(ft.DataRow(cells=[
                 ft.DataCell(ft.Text(item.get("fecha", ""))),
+                ft.DataCell(ft.Text(item.get("n_parte", ""))),
+                ft.DataCell(ft.Text(item.get("constructora", ""))),
                 ft.DataCell(ft.Text(item.get("lugar", ""))),
-                ft.DataCell(ft.Text(str(item.get("horas", ""))))
+                ft.DataCell(ft.Text(str(item.get("horas", "")))),
+                ft.DataCell(ft.Text(str(item.get("metros", "")))),
+                ft.DataCell(ft.Text(item.get("companero", ""))),
             ]))
 
         contenedor_principal.content = ft.Container(
             content=ft.Column([
-                ft.AppBar(title=ft.Text("Historial"), bgcolor="blue", color="white", 
+                ft.AppBar(title=ft.Text("Historial Completo"), bgcolor="blue", color="white", 
                           leading=ft.IconButton("arrow_back", on_click=mostrar_inicio)),
-                ft.ElevatedButton("VOLVER AL MENÚ", icon="home", on_click=mostrar_inicio), # <-- BOTÓN DE REGRESO
+                ft.ElevatedButton("VOLVER AL MENÚ", icon="home", on_click=mostrar_inicio),
                 ft.Divider(),
-                # Tabla con scroll horizontal automático
+                # Tabla con todas las columnas y scroll horizontal
                 ft.Row([
                     ft.DataTable(
                         columns=[
                             ft.DataColumn(ft.Text("Fecha")),
+                            ft.DataColumn(ft.Text("Nº Parte")),
+                            ft.DataColumn(ft.Text("Constructora")),
                             ft.DataColumn(ft.Text("Lugar")),
                             ft.DataColumn(ft.Text("Horas")),
+                            ft.DataColumn(ft.Text("Metros")),
+                            ft.DataColumn(ft.Text("Compañero")),
                         ],
                         rows=filas
                     )
