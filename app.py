@@ -13,37 +13,78 @@ def main(page: ft.Page):
     page.theme_mode = ft.ThemeMode.LIGHT
     page.bgcolor = "#F8F9FA"
 
-    # --- CONTENEDOR PRINCIPAL ---
+    # --- CAMPOS DEL FORMULARIO ---
+    f_fecha = ft.TextField(label="Fecha", value="26/06/2026")
+    f_horas = ft.TextField(label="Horas trabajadas")
+    f_metros = ft.TextField(label="Metros instalados")
+    f_lugar = ft.TextField(label="Lugar")
+    f_n_parte = ft.TextField(label="Nº Parte")
+    f_constructora = ft.TextField(label="Constructora")
+    f_companero = ft.TextField(label="Compañero")
+
     contenedor_principal = ft.Container()
 
-    # --- FUNCIÓN: IR AL FORMULARIO ---
+    # --- TABLA DE DATOS ---
+    tabla = ft.DataTable(columns=[
+        ft.DataColumn(ft.Text("Lugar")),
+        ft.DataColumn(ft.Text("Horas")),
+    ])
+
+    def cargar_datos(e=None):
+        response = supabase.table("datos_app").select("*").execute()
+        tabla.rows.clear()
+        for item in response.data:
+            tabla.rows.append(ft.DataRow(cells=[
+                ft.DataCell(ft.Text(item.get("lugar", ""))),
+                ft.DataCell(ft.Text(str(item.get("horas", "")))),
+            ]))
+        page.update()
+
+    # --- NAVEGACIÓN ---
     def mostrar_formulario(e):
         contenedor_principal.content = ft.Container(
             content=ft.Column([
                 ft.AppBar(title=ft.Text("Nuevo Parte"), bgcolor="blue", color="white", 
                           leading=ft.IconButton("arrow_back", on_click=mostrar_inicio)),
-                ft.TextField(label="Fecha", value="26/06/2026"),
-                ft.TextField(label="Horas trabajadas"),
-                ft.TextField(label="Metros"),
-                ft.ElevatedButton("GUARDAR PARTE", icon="save")
+                f_fecha, f_horas, f_metros, f_lugar, f_n_parte, f_constructora, f_companero,
+                ft.ElevatedButton("GUARDAR PARTE", icon="save", on_click=guardar_y_volver)
             ]),
-            padding=20 # El padding va aquí, en el contenedor
+            padding=20
         )
         page.update()
 
-    # --- FUNCIÓN: IR AL INICIO ---
+    def guardar_y_volver(e):
+        datos = {
+            "fecha": f_fecha.value, "horas": f_horas.value, "metros": f_metros.value,
+            "lugar": f_lugar.value, "n_parte": f_n_parte.value, 
+            "constructora": f_constructora.value, "companero": f_companero.value
+        }
+        supabase.table("datos_app").insert(datos).execute()
+        mostrar_inicio(None)
+
+    def mostrar_historial(e):
+        cargar_datos()
+        contenedor_principal.content = ft.Container(
+            content=ft.Column([
+                ft.AppBar(title=ft.Text("Historial"), bgcolor="blue", color="white", 
+                          leading=ft.IconButton("arrow_back", on_click=mostrar_inicio)),
+                ft.ListView(controls=[tabla], expand=True)
+            ]),
+            padding=20
+        )
+        page.update()
+
     def mostrar_inicio(e):
         contenedor_principal.content = ft.Container(
             content=ft.Column([
                 ft.Text("Menú Principal", size=24, weight="bold"),
                 ft.ElevatedButton("NUEVO REGISTRO", icon="add", on_click=mostrar_formulario),
-                ft.ElevatedButton("VER HISTORIAL", icon="list")
+                ft.ElevatedButton("VER HISTORIAL", icon="list", on_click=mostrar_historial)
             ], alignment=ft.MainAxisAlignment.CENTER, horizontal_alignment=ft.CrossAxisAlignment.CENTER),
-            padding=50 # El padding va aquí
+            padding=50
         )
         page.update()
 
-    # --- INICIO ---
     page.add(contenedor_principal)
     mostrar_inicio(None)
 
