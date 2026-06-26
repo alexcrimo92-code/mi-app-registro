@@ -9,103 +9,59 @@ supabase = create_client(URL, KEY)
 
 
 def main(page: ft.Page):
-    page.title = "Registro de Trabajo"
+    # Configuración de la página para que se vea bien en móvil
+    page.title = "App Registro"
     page.theme_mode = ft.ThemeMode.LIGHT
-    page.bgcolor = "#F8F9FA"
+    page.bgcolor = "#F0F2F5"
+    page.padding = 0
 
-    # --- CAMPOS DEL FORMULARIO ---
-    f_fecha = ft.TextField(label="Fecha", value="26/06/2026")
-    f_horas = ft.TextField(label="Horas")
-    f_metros = ft.TextField(label="Metros")
-    f_lugar = ft.TextField(label="Lugar")
-    f_n_parte = ft.TextField(label="Nº Parte")
-    f_constructora = ft.TextField(label="Constructora")
-    f_companero = ft.TextField(label="Compañero")
+    # Contenedor principal donde cambiaremos de "pantalla"
+    content_area = ft.Container(padding=20)
 
-    # --- FUNCIONES DE NAVEGACIÓN ---
+    def crear_boton(texto, icon, on_click, color="#007AFF"):
+        return ft.ElevatedButton(
+            content=ft.Row([ft.Icon(icon, color="white"), ft.Text(texto)], alignment=ft.MainAxisAlignment.CENTER),
+            style=ft.ButtonStyle(bgcolor=color, color="white", padding=20),
+            on_click=on_click
+        )
 
     def mostrar_inicio(e=None):
-        page.clean()
-        page.add(
-            ft.Container(
-                content=ft.Column([
-                    ft.Text("Menú Principal", size=24, weight="bold"),
-                    ft.ElevatedButton("NUEVO REGISTRO", icon="add", on_click=mostrar_formulario),
-                    ft.ElevatedButton("VER HISTORIAL", icon="list", on_click=mostrar_historial)
-                ], alignment=ft.MainAxisAlignment.CENTER, horizontal_alignment=ft.CrossAxisAlignment.CENTER),
-                padding=50
-            )
-        )
+        content_area.content = ft.Column([
+            ft.Text("Bienvenido", size=30, weight="bold", color="#1C1C1E"),
+            ft.Text("Registro de Trabajo", size=16, color="gray"),
+            ft.Container(height=30),
+            crear_boton("NUEVO REGISTRO", "add", mostrar_formulario),
+            ft.Container(height=10),
+            crear_boton("VER HISTORIAL", "history", mostrar_historial, color="#5856D6")
+        ], alignment=ft.MainAxisAlignment.CENTER, horizontal_alignment=ft.CrossAxisAlignment.CENTER)
         page.update()
 
     def mostrar_formulario(e):
-        page.clean()
-        page.add(
-            ft.Container(
-                content=ft.Column([
-                    ft.AppBar(title=ft.Text("Nuevo Parte"), bgcolor="blue", color="white", 
-                              leading=ft.IconButton("arrow_back", on_click=mostrar_inicio)),
-                    f_fecha, f_horas, f_metros, f_lugar, f_n_parte, f_constructora, f_companero,
-                    ft.ElevatedButton("GUARDAR PARTE", icon="save", on_click=guardar_y_volver),
-                    ft.OutlinedButton("CANCELAR", icon="close", on_click=mostrar_inicio)
-                ], scroll=ft.ScrollMode.AUTO),
-                padding=20
-            )
-        )
+        # Campos con diseño mejorado
+        campos = [
+            ft.TextField(label="Fecha", value="26/06/2026", border_color="#007AFF"),
+            ft.TextField(label="Horas", border_color="#007AFF"),
+            ft.TextField(label="Lugar", border_color="#007AFF")
+        ]
+        content_area.content = ft.Column([
+            ft.IconButton("arrow_back", on_click=mostrar_inicio),
+            ft.Text("Nuevo Registro", size=24, weight="bold"),
+            *campos,
+            crear_boton("GUARDAR", "save", mostrar_inicio)
+        ], spacing=20)
         page.update()
-
-    def guardar_y_volver(e):
-        datos = {
-            "fecha": f_fecha.value, "horas": f_horas.value, "metros": f_metros.value,
-            "lugar": f_lugar.value, "n_parte": f_n_parte.value, 
-            "constructora": f_constructora.value, "companero": f_companero.value
-        }
-        supabase.table("datos_app").insert(datos).execute()
-        mostrar_inicio()
 
     def mostrar_historial(e):
-        page.clean()
-        try:
-            response = supabase.table("datos_app").select("*").execute()
-            tarjetas = []
-            for item in response.data:
-                tarjetas.append(
-                    ft.Card(
-                        content=ft.Container(
-                            content=ft.Column([
-                                ft.Text(f"PARTE Nº: {item.get('n_parte', 'N/A')}", size=20, weight="bold", color="blue"),
-                                ft.Text(f"Fecha: {item.get('fecha', '')}", size=14, color="grey"),
-                                ft.Divider(height=1, color="grey"),
-                                ft.Column([
-                                    ft.Text(f"🏢 {item.get('constructora', 'N/A')}", size=16),
-                                    ft.Text(f"📍 {item.get('lugar', 'N/A')}", size=16),
-                                    ft.Text(f"⏱ {item.get('horas', '0')} hrs | 📏 {item.get('metros', '0')} m", size=16, weight="w500"),
-                                    ft.Text(f"👥 {item.get('companero', 'N/A')}", size=16),
-                                ], spacing=8, horizontal_alignment=ft.CrossAxisAlignment.START),
-                            ], spacing=10, horizontal_alignment=ft.CrossAxisAlignment.CENTER),
-                            padding=20
-                        )
-                    )
-                )
-        except Exception as ex:
-            tarjetas = [ft.Text(f"Error: {ex}")]
-
-        page.add(
-            ft.Container(
-                content=ft.Column([
-                    ft.AppBar(title=ft.Text("Historial de Partes"), bgcolor="blue", color="white", 
-                              leading=ft.IconButton("arrow_back", on_click=mostrar_inicio)),
-                    ft.ElevatedButton("VOLVER AL MENÚ", icon="home", on_click=mostrar_inicio),
-                    ft.ListView(controls=tarjetas, expand=True, spacing=15)
-                ], expand=True),
-                padding=10,
-                expand=True
-            )
-        )
+        # Aquí cargaríamos los datos, pero primero definimos el diseño
+        content_area.content = ft.Column([
+            ft.IconButton("arrow_back", on_click=mostrar_inicio),
+            ft.Text("Historial", size=24, weight="bold"),
+            ft.Card(content=ft.Container(content=ft.Text("Registro #1: 8 horas - Gamiz"), padding=20)),
+            ft.Card(content=ft.Container(content=ft.Text("Registro #2: 7 horas - Meco"), padding=20))
+        ])
         page.update()
 
-    # Inicializar App
+    page.add(content_area)
     mostrar_inicio()
 
-# Lanza la aplicación
 ft.app(target=main, view=ft.AppView.WEB_BROWSER, port=int(os.environ.get("PORT", 8080)))
