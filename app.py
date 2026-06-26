@@ -57,48 +57,48 @@ def main(page: ft.Page):
         supabase.table("datos_app").insert(datos).execute()
         mostrar_inicio()
 
-    def mostrar_historial(e):
-        # Obtener datos de Supabase
+   def mostrar_historial(e):
+        # Obtener datos
         response = supabase.table("datos_app").select("*").execute()
         
-        filas = []
+        tarjetas = []
         for item in response.data:
-            filas.append(ft.DataRow(cells=[
-                ft.DataCell(ft.Text(item.get("fecha", ""))),
-                ft.DataCell(ft.Text(item.get("n_parte", ""))),
-                ft.DataCell(ft.Text(item.get("constructora", ""))),
-                ft.DataCell(ft.Text(item.get("lugar", ""))),
-                ft.DataCell(ft.Text(str(item.get("horas", "")))),
-                ft.DataCell(ft.Text(str(item.get("metros", "")))),
-                ft.DataCell(ft.Text(item.get("companero", ""))),
-            ]))
+            tarjetas.append(
+                ft.Card(
+                    content=ft.Container(
+                        content=ft.Column([
+                            ft.ListTile(
+                                leading=ft.Icon(ft.icons.WORK),
+                                title=ft.Text(f"Nº Parte: {item.get('n_parte', 'N/A')}"),
+                                subtitle=ft.Text(f"Fecha: {item.get('fecha', '')}"),
+                            ),
+                            ft.Container(
+                                content=ft.Column([
+                                    ft.Text(f"Constructora: {item.get('constructora', '')}"),
+                                    ft.Text(f"Lugar: {item.get('lugar', '')}"),
+                                    ft.Text(f"Horas: {item.get('horas', '')} | Metros: {item.get('metros', '')}"),
+                                    ft.Text(f"Compañero: {item.get('companero', '')}"),
+                                ], spacing=5),
+                                padding=10
+                            )
+                        ]),
+                        padding=10
+                    )
+                )
+            )
 
         contenedor_principal.content = ft.Container(
             content=ft.Column([
-                ft.AppBar(title=ft.Text("Historial Completo"), bgcolor="blue", color="white", 
+                ft.AppBar(title=ft.Text("Historial de Partes"), bgcolor="blue", color="white", 
                           leading=ft.IconButton("arrow_back", on_click=mostrar_inicio)),
                 ft.ElevatedButton("VOLVER AL MENÚ", icon="home", on_click=mostrar_inicio),
                 ft.Divider(),
-                # Tabla con todas las columnas y scroll horizontal
-                ft.Row([
-                    ft.DataTable(
-                        columns=[
-                            ft.DataColumn(ft.Text("Fecha")),
-                            ft.DataColumn(ft.Text("Nº Parte")),
-                            ft.DataColumn(ft.Text("Constructora")),
-                            ft.DataColumn(ft.Text("Lugar")),
-                            ft.DataColumn(ft.Text("Horas")),
-                            ft.DataColumn(ft.Text("Metros")),
-                            ft.DataColumn(ft.Text("Compañero")),
-                        ],
-                        rows=filas
-                    )
-                ], scroll=ft.ScrollMode.AUTO)
+                # Aquí mostramos la lista de tarjetas
+                ft.ListView(controls=tarjetas, expand=True, spacing=10)
             ], scroll=ft.ScrollMode.AUTO),
             padding=20
         )
         page.update()
-
     page.add(contenedor_principal)
     mostrar_inicio()
 
