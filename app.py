@@ -10,7 +10,6 @@ supabase = create_client(URL, KEY)
 
 
 def main(page: ft.Page):
-    # Definimos la carpeta de archivos estáticos
     page.assets_dir = "assets"
     page.title = "App Registro"
     page.theme_mode = "light"
@@ -31,32 +30,25 @@ def main(page: ft.Page):
     def mostrar_menu(e=None):
         h, m = obtener_totales()
         
-        # Menú principal con fondo y cálculos
+        # Usamos DecorationImage para el fondo en lugar de image_src
         contenedor_pantalla.content = ft.Container(
-            image_src="fondo.jpg",
-            image_fit="cover",
-            padding=20,
+            image=ft.DecorationImage(src="fondo.jpg", fit="cover"),
             content=ft.Column([
-                ft.Text("CONTROL DE OBRA", size=26, weight="bold", color="white"),
-                ft.Container(
-                    bgcolor="white", padding=20, border_radius=15,
-                    content=ft.Row([
-                        ft.Column([ft.Text("Total Horas ⏱"), ft.Text(str(h), size=20, weight="bold")]),
-                        ft.VerticalDivider(),
-                        ft.Column([ft.Text("Total Metros 📏"), ft.Text(str(m), size=20, weight="bold")])
-                    ], alignment="center")
-                ),
-                ft.ElevatedButton("NUEVO REGISTRO", icon="add", on_click=mostrar_formulario),
-                ft.ElevatedButton("VER HISTORIAL", icon="list", on_click=mostrar_historial)
-            ], alignment="center", horizontal_alignment="center")
+                ft.Text("MENÚ PRINCIPAL", size=24, weight="bold", color="white"),
+                ft.Text(f"Total Horas ⏱: {h}", color="white"),
+                ft.Text(f"Total Metros 📏: {m}", color="white"),
+                ft.ElevatedButton("NUEVO REGISTRO", on_click=mostrar_formulario),
+                ft.ElevatedButton("VER HISTORIAL", on_click=mostrar_historial)
+            ], alignment="center", horizontal_alignment="center"),
+            padding=20
         )
         page.update()
 
-    # --- FORMULARIO ---
+    # --- CAMPOS ---
     f_fecha = ft.TextField(label="Fecha", value="26/06/2026")
     f_horas = ft.TextField(label="Horas")
     f_metros = ft.TextField(label="Metros")
-    f_material = ft.TextField(label="Material Instalado")
+    f_material = ft.TextField(label="Material instalado")
     f_lugar = ft.TextField(label="Lugar")
     f_parte = ft.TextField(label="Nº Parte")
     f_constr = ft.TextField(label="Constructora")
@@ -73,42 +65,33 @@ def main(page: ft.Page):
 
     def mostrar_formulario(e):
         contenedor_pantalla.content = ft.Column([
-            ft.Text("Nuevo Registro", size=20, weight="bold"),
+            ft.Text("Nuevo Registro", size=20),
             f_fecha, f_horas, f_metros, f_material, f_lugar, f_parte, f_constr, f_comp,
-            ft.ElevatedButton("GUARDAR", icon="save", on_click=guardar_registro),
-            ft.ElevatedButton("← VOLVER", icon="arrow_back", on_click=mostrar_menu)
+            ft.ElevatedButton("GUARDAR", on_click=guardar_registro),
+            ft.ElevatedButton("← VOLVER", on_click=mostrar_menu)
         ], scroll="auto", padding=20)
         page.update()
 
     def mostrar_historial(e):
         try:
-            response = supabase.table("datos_app").select("*").execute()
-            tarjetas = []
-            for item in response.data:
-                tarjeta = ft.Card(content=ft.Container(padding=15, content=ft.Column([
-                    ft.Row([
-                        ft.Text(f"📅 {item.get('fecha', 'N/A')}"),
-                        ft.Text(f"Parte: {item.get('n_parte', 'N/A')}", weight="bold")
-                    ], alignment="spaceBetween"),
-                    ft.Divider(),
-                    ft.Text(f"🏢 {item.get('constructora', 'N/A')}"),
-                    ft.Text(f"📍 {item.get('lugar', 'N/A')}"),
-                    ft.Row([
-                        ft.Text(f"⏱ {item.get('horas', '0')} h"),
-                        ft.Text(f"📏 {item.get('metros', '0')} m"),
-                        ft.Text(f"🛠 {item.get('material instalado', 'N/A')}")
-                    ]),
-                    ft.Text(f"👥 {item.get('companero', 'N/A')}")
-                ])))
-                tarjetas.append(tarjeta)
+            res = supabase.table("datos_app").select("*").execute()
+            lista_historial = ft.Column(scroll="auto")
+            for item in res.data:
+                tarjeta = ft.Column([
+                    ft.Text(f"📅 {item.get('fecha')} | Parte: {item.get('n_parte', 'N/A')}", weight="bold"),
+                    ft.Text(f"🏢 {item.get('constructora')} | 📍 {item.get('lugar')}"),
+                    ft.Text(f"⏱ {item.get('horas')}h | 📏 {item.get('metros')}m | 🛠 {item.get('material instalado', 'N/A')}"),
+                    ft.Text(f"👥 {item.get('companero')}"),
+                    ft.Divider()
+                ])
+                lista_historial.controls.append(tarjeta)
         except:
-            tarjetas = [ft.Text("Error al cargar")]
+            lista_historial = ft.Text("Error al cargar")
 
         contenedor_pantalla.content = ft.Column([
-            ft.Text("Historial", size=20, weight="bold"),
-            ft.ListView(controls=tarjetas, expand=True, spacing=10),
-            ft.ElevatedButton("← VOLVER", icon="arrow_back", on_click=mostrar_menu)
-        ], expand=True, padding=20)
+            ft.ElevatedButton("← VOLVER", on_click=mostrar_menu),
+            lista_historial
+        ], padding=20)
         page.update()
 
     page.add(contenedor_pantalla)
