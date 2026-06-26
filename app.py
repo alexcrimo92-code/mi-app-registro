@@ -13,7 +13,7 @@ def main(page: ft.Page):
     page.theme_mode = ft.ThemeMode.LIGHT
     page.bgcolor = "#F8F9FA"
 
-    # --- CAMPOS ---
+    # --- CAMPOS DEL FORMULARIO ---
     f_fecha = ft.TextField(label="Fecha", value="26/06/2026")
     f_horas = ft.TextField(label="Horas")
     f_metros = ft.TextField(label="Metros")
@@ -21,6 +21,8 @@ def main(page: ft.Page):
     f_n_parte = ft.TextField(label="Nº Parte")
     f_constructora = ft.TextField(label="Constructora")
     f_companero = ft.TextField(label="Compañero")
+
+    # --- FUNCIONES DE NAVEGACIÓN ---
 
     def mostrar_inicio(e=None):
         page.clean()
@@ -62,7 +64,7 @@ def main(page: ft.Page):
         mostrar_inicio()
 
     def mostrar_historial(e):
-       page.clean()
+        page.clean()
         try:
             response = supabase.table("datos_app").select("*").execute()
             tarjetas = []
@@ -71,13 +73,11 @@ def main(page: ft.Page):
                     ft.Card(
                         content=ft.Container(
                             content=ft.Column([
-                                # Título centrado
                                 ft.ListTile(
                                     leading=ft.Icon("work"),
                                     title=ft.Text(f"Nº Parte: {item.get('n_parte', 'N/A')}", text_align="center"),
                                     subtitle=ft.Text(f"Fecha: {item.get('fecha', '')}", text_align="center"),
                                 ),
-                                # Contenido centrado
                                 ft.Container(
                                     content=ft.Column([
                                         ft.Text(f"Constructora: {item.get('constructora', '')}", text_align="center"),
@@ -90,15 +90,13 @@ def main(page: ft.Page):
                                     spacing=5),
                                     padding=10
                                 )
-                            ], 
-                            alignment=ft.MainAxisAlignment.CENTER, 
-                            horizontal_alignment=ft.CrossAxisAlignment.CENTER),
+                            ], alignment=ft.MainAxisAlignment.CENTER, horizontal_alignment=ft.CrossAxisAlignment.CENTER),
                             padding=10
                         )
                     )
                 )
         except Exception as ex:
-            tarjetas = [ft.Text(f"Error: {ex}")]
+            tarjetas = [ft.Text(f"Error al cargar datos: {ex}")]
 
         page.add(
             ft.Container(
@@ -114,6 +112,8 @@ def main(page: ft.Page):
         )
         page.update()
 
+    # Inicializar App
     mostrar_inicio()
 
+# Lanza la aplicación
 ft.app(target=main, view=ft.AppView.WEB_BROWSER, port=int(os.environ.get("PORT", 8080)))
