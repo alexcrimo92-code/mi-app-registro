@@ -10,12 +10,11 @@ supabase = create_client(URL, KEY)
 
 
 def main(page: ft.Page):
-    page.assets_dir = "assets"
     page.title = "App Registro"
     page.theme_mode = "light"
-    page.padding = 0
 
-    contenedor_pantalla = ft.Container(expand=True)
+    contenedor_pantalla = ft.Column()
+    page.add(contenedor_pantalla)
 
     def obtener_totales():
         try:
@@ -28,20 +27,22 @@ def main(page: ft.Page):
             return 0, 0
 
     def mostrar_menu(e=None):
+        contenedor_pantalla.controls.clear()
         h, m = obtener_totales()
         
-        # Usamos DecorationImage para el fondo en lugar de image_src
-        contenedor_pantalla.content = ft.Container(
-            image=ft.DecorationImage(src="fondo.jpg", fit="cover"),
+        # Tarjeta visual (usando Container para máxima compatibilidad)
+        tarjeta = ft.Container(
             content=ft.Column([
-                ft.Text("MENÚ PRINCIPAL", size=24, weight="bold", color="white"),
-                ft.Text(f"Total Horas ⏱: {h}", color="white"),
-                ft.Text(f"Total Metros 📏: {m}", color="white"),
-                ft.ElevatedButton("NUEVO REGISTRO", on_click=mostrar_formulario),
-                ft.ElevatedButton("VER HISTORIAL", on_click=mostrar_historial)
-            ], alignment="center", horizontal_alignment="center"),
+                ft.Text("MENÚ PRINCIPAL", size=24, weight="bold"),
+                ft.Text(f"Total Horas ⏱: {h}"),
+                ft.Text(f"Total Metros 📏: {m}"),
+            ]),
+            border=ft.border.all(1, "black"),
+            border_radius=10,
             padding=20
         )
+        
+        contenedor_pantalla.controls.extend([tarjeta, ft.ElevatedButton("NUEVO REGISTRO", on_click=mostrar_formulario), ft.ElevatedButton("VER HISTORIAL", on_click=mostrar_historial)])
         page.update()
 
     # --- CAMPOS ---
@@ -64,37 +65,33 @@ def main(page: ft.Page):
         mostrar_menu()
 
     def mostrar_formulario(e):
-        contenedor_pantalla.content = ft.Column([
-            ft.Text("Nuevo Registro", size=20),
-            f_fecha, f_horas, f_metros, f_material, f_lugar, f_parte, f_constr, f_comp,
-            ft.ElevatedButton("GUARDAR", on_click=guardar_registro),
-            ft.ElevatedButton("← VOLVER", on_click=mostrar_menu)
-        ], scroll="auto", padding=20)
+        contenedor_pantalla.controls.clear()
+        contenedor_pantalla.controls.extend([ft.Text("Nuevo Registro"), f_fecha, f_horas, f_metros, f_material, f_lugar, f_parte, f_constr, f_comp, ft.ElevatedButton("GUARDAR", on_click=guardar_registro), ft.ElevatedButton("VOLVER", on_click=mostrar_menu)])
         page.update()
 
     def mostrar_historial(e):
+        contenedor_pantalla.controls.clear()
+        contenedor_pantalla.controls.append(ft.ElevatedButton("VOLVER", on_click=mostrar_menu))
         try:
             res = supabase.table("datos_app").select("*").execute()
-            lista_historial = ft.Column(scroll="auto")
             for item in res.data:
-                tarjeta = ft.Column([
-                    ft.Text(f"📅 {item.get('fecha')} | Parte: {item.get('n_parte', 'N/A')}", weight="bold"),
-                    ft.Text(f"🏢 {item.get('constructora')} | 📍 {item.get('lugar')}"),
-                    ft.Text(f"⏱ {item.get('horas')}h | 📏 {item.get('metros')}m | 🛠 {item.get('material instalado', 'N/A')}"),
-                    ft.Text(f"👥 {item.get('companero')}"),
-                    ft.Divider()
-                ])
-                lista_historial.controls.append(tarjeta)
+                # La tarjeta de historial
+                tarjeta = ft.Container(
+                    content=ft.Column([
+                        ft.Text(f"📅 {item.get('fecha')} | Parte: {item.get('n_parte', 'N/A')}", weight="bold"),
+                        ft.Text(f"🏢 {item.get('constructora')} | 📍 {item.get('lugar')}"),
+                        ft.Text(f"⏱ {item.get('horas')}h | 📏 {item.get('metros')}m | 🛠 {item.get('material instalado', 'N/A')}"),
+                        ft.Text(f"👥 {item.get('companero')}")
+                    ]),
+                    border=ft.border.all(1, "grey"),
+                    border_radius=5,
+                    padding=10
+                )
+                contenedor_pantalla.controls.append(tarjeta)
         except:
-            lista_historial = ft.Text("Error al cargar")
-
-        contenedor_pantalla.content = ft.Column([
-            ft.ElevatedButton("← VOLVER", on_click=mostrar_menu),
-            lista_historial
-        ], padding=20)
+            contenedor_pantalla.controls.append(ft.Text("Error al cargar"))
         page.update()
 
-    page.add(contenedor_pantalla)
     mostrar_menu()
 
 if __name__ == "__main__":
