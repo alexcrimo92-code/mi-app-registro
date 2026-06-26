@@ -17,32 +17,7 @@ def main(page: ft.Page):
 
     contenedor_pantalla = ft.Container(padding=20, expand=True)
 
-    def obtener_totales():
-        try:
-            response = supabase.table("datos_app").select("horas, metros").execute()
-            data = response.data
-            t_h = sum(float(i.get('horas', 0) or 0) for i in data)
-            t_m = sum(float(i.get('metros', 0) or 0) for i in data)
-            return t_h, t_m
-        except:
-            return 0, 0
-
-    def guardar_registro(e):
-        # Aquí recolectamos todos los datos del formulario
-        datos = {
-            "fecha": f_fecha.value,
-            "horas": f_horas.value,
-            "metros": f_metros.value,
-            "material": f_material.value,
-            "lugar": f_lugar.value,
-            "n_parte": f_parte.value,
-            "constructora": f_constr.value,
-            "companero": f_comp.value
-        }
-        supabase.table("datos_app").insert(datos).execute()
-        mostrar_menu()
-
-    # Campos definidos globalmente para acceder a sus valores
+    # Campos del formulario (Coinciden con columnas de Supabase)
     f_fecha = ft.TextField(label="Fecha", value="26/06/2026")
     f_horas = ft.TextField(label="Horas")
     f_metros = ft.TextField(label="Metros")
@@ -52,15 +27,23 @@ def main(page: ft.Page):
     f_constr = ft.TextField(label="Constructora")
     f_comp = ft.TextField(label="Compañero")
 
+    def guardar_registro(e):
+        datos = {
+            "fecha": f_fecha.value,
+            "horas": f_horas.value,
+            "metros": f_metros.value,
+            "material instalado": f_material.value, # Nombre exacto de tu columna
+            "lugar": f_lugar.value,
+            "n_parte": f_parte.value,
+            "constructora": f_constr.value,
+            "companero": f_comp.value
+        }
+        supabase.table("datos_app").insert(datos).execute()
+        mostrar_menu()
+
     def mostrar_menu(e=None):
-        h, m = obtener_totales()
         contenedor_pantalla.content = ft.Column([
             ft.Text("MENÚ PRINCIPAL", size=24, weight="bold"),
-            ft.Card(content=ft.Container(padding=20, content=ft.Row([
-                ft.Column([ft.Text("Total Horas"), ft.Text(str(h), size=20, weight="bold")]),
-                ft.VerticalDivider(),
-                ft.Column([ft.Text("Total Metros"), ft.Text(str(m), size=20, weight="bold")])
-            ], alignment="center"))),
             ft.ElevatedButton("NUEVO REGISTRO", icon="add", on_click=mostrar_formulario),
             ft.ElevatedButton("VER HISTORIAL", icon="list", on_click=mostrar_historial)
         ], alignment="center", horizontal_alignment="center")
@@ -71,8 +54,8 @@ def main(page: ft.Page):
             ft.Text("Nuevo Registro", size=20, weight="bold"),
             f_fecha, f_horas, f_metros, f_material, f_lugar, f_parte, f_constr, f_comp,
             ft.ElevatedButton("GUARDAR", icon="save", on_click=guardar_registro),
-            ft.ElevatedButton("← VOLVER AL MENÚ", icon="arrow_back", on_click=mostrar_menu)
-        ], scroll="auto") # scroll auto por si son muchos campos
+            ft.ElevatedButton("← VOLVER", icon="arrow_back", on_click=mostrar_menu)
+        ], scroll="auto")
         page.update()
 
     def mostrar_historial(e):
@@ -83,9 +66,9 @@ def main(page: ft.Page):
                 ft.Divider(),
                 ft.Text(f"🏢 {item.get('constructora', 'N/A')}"),
                 ft.Text(f"📍 {item.get('lugar', 'N/A')}"),
-                ft.Text(f"🛠 {item.get('material', 'N/A')}"), # Nuevo campo agregado
+                ft.Text(f"🛠 {item.get('material instalado', 'N/A')}"), # Nombre exacto
                 ft.Text(f"⏱ {item.get('horas', '0')} hrs | 📏 {item.get('metros', '0')} m"),
-                ft.Text(f"📅 {item.get('fecha', 'N/A')} | 👥 {item.get('companero', 'N/A')}")
+                ft.Text(f"👥 {item.get('companero', 'N/A')}")
             ]))) for item in response.data]
         except:
             tarjetas = [ft.Text("Error al cargar")]
@@ -93,7 +76,7 @@ def main(page: ft.Page):
         contenedor_pantalla.content = ft.Column([
             ft.Text("Historial", size=20, weight="bold"),
             ft.ListView(controls=tarjetas, expand=True, spacing=10),
-            ft.ElevatedButton("← VOLVER AL MENÚ", icon="arrow_back", on_click=mostrar_menu)
+            ft.ElevatedButton("← VOLVER", icon="arrow_back", on_click=mostrar_menu)
         ], expand=True)
         page.update()
 
