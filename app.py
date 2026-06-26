@@ -17,7 +17,33 @@ def main(page: ft.Page):
 
     contenedor_pantalla = ft.Container(padding=20, expand=True)
 
-    # Campos del formulario (Coinciden con columnas de Supabase)
+    def obtener_totales():
+        try:
+            response = supabase.table("datos_app").select("horas, metros").execute()
+            data = response.data
+            # Aseguramos que los valores sean números, manejando posibles Nones
+            t_h = sum(float(i.get('horas', 0) or 0) for i in data)
+            t_m = sum(float(i.get('metros', 0) or 0) for i in data)
+            return t_h, t_m
+        except:
+            return 0, 0
+
+    def mostrar_menu(e=None):
+        h, m = obtener_totales()
+        contenedor_pantalla.content = ft.Column([
+            ft.Text("CONTROL DE OBRA", size=24, weight="bold"),
+            # Tarjeta de totales con cálculos
+            ft.Card(content=ft.Container(padding=20, content=ft.Row([
+                ft.Column([ft.Text("Total Horas ⏱"), ft.Text(str(h), size=20, weight="bold")]),
+                ft.VerticalDivider(),
+                ft.Column([ft.Text("Total Metros 📏"), ft.Text(str(m), size=20, weight="bold")])
+            ], alignment="center"))),
+            ft.ElevatedButton("NUEVO REGISTRO", icon="add", on_click=mostrar_formulario),
+            ft.ElevatedButton("VER HISTORIAL", icon="list", on_click=mostrar_historial)
+        ], alignment="center", horizontal_alignment="center")
+        page.update()
+
+    # Campos definidos para el formulario
     f_fecha = ft.TextField(label="Fecha", value="26/06/2026")
     f_horas = ft.TextField(label="Horas")
     f_metros = ft.TextField(label="Metros")
@@ -29,25 +55,12 @@ def main(page: ft.Page):
 
     def guardar_registro(e):
         datos = {
-            "fecha": f_fecha.value,
-            "horas": f_horas.value,
-            "metros": f_metros.value,
-            "material instalado": f_material.value, # Nombre exacto de tu columna
-            "lugar": f_lugar.value,
-            "n_parte": f_parte.value,
-            "constructora": f_constr.value,
-            "companero": f_comp.value
+            "fecha": f_fecha.value, "horas": f_horas.value, "metros": f_metros.value, 
+            "material instalado": f_material.value, "lugar": f_lugar.value, 
+            "n_parte": f_parte.value, "constructora": f_constr.value, "companero": f_comp.value
         }
         supabase.table("datos_app").insert(datos).execute()
         mostrar_menu()
-
-    def mostrar_menu(e=None):
-        contenedor_pantalla.content = ft.Column([
-            ft.Text("MENÚ PRINCIPAL", size=24, weight="bold"),
-            ft.ElevatedButton("NUEVO REGISTRO", icon="add", on_click=mostrar_formulario),
-            ft.ElevatedButton("VER HISTORIAL", icon="list", on_click=mostrar_historial)
-        ], alignment="center", horizontal_alignment="center")
-        page.update()
 
     def mostrar_formulario(e):
         contenedor_pantalla.content = ft.Column([
@@ -61,15 +74,24 @@ def main(page: ft.Page):
     def mostrar_historial(e):
         try:
             response = supabase.table("datos_app").select("*").execute()
-            tarjetas = [ft.Card(content=ft.Container(padding=15, content=ft.Column([
-                ft.Text(f"PARTE: {item.get('n_parte', 'N/A')}", weight="bold"),
-                ft.Divider(),
-                ft.Text(f"🏢 {item.get('constructora', 'N/A')}"),
-                ft.Text(f"📍 {item.get('lugar', 'N/A')}"),
-                ft.Text(f"🛠 {item.get('material instalado', 'N/A')}"), # Nombre exacto
-                ft.Text(f"⏱ {item.get('horas', '0')} hrs | 📏 {item.get('metros', '0')} m"),
-                ft.Text(f"👥 {item.get('companero', 'N/A')}")
-            ]))) for item in response.data]
+            tarjetas = []
+            for item in response.data:
+                tarjeta = ft.Card(content=ft.Container(padding=15, content=ft.Column([
+                    ft.Row([
+                        ft.Text(f"📅 {item.get('fecha', 'N/A')}"),
+                        ft.Text(f"Parte: {item.get('n_parte', 'N/A')}", weight="bold")
+                    ], alignment="spaceBetween"),
+                    ft.Divider(),
+                    ft.Text(f"🏢 {item.get('constructora', 'N/A')}"),
+                    ft.Text(f"📍 {item.get('lugar', 'N/A')}"),
+                    ft.Row([
+                        ft.Text(f"⏱ {item.get('horas', '0')} h"),
+                        ft.Text(f"📏 {item.get('metros', '0')} m"),
+                        ft.Text(f"🛠 {item.get('material instalado', 'N/A')}")
+                    ]),
+                    ft.Text(f"👥 {item.get('companero', 'N/A')}")
+                ])))
+                tarjetas.append(tarjeta)
         except:
             tarjetas = [ft.Text("Error al cargar")]
 
