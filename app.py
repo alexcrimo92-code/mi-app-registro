@@ -10,18 +10,19 @@ supabase = create_client(URL, KEY)
 
 
 def main(page: ft.Page):
+    # Definimos la carpeta de archivos estáticos
+    page.assets_dir = "assets"
+    
     page.title = "App Registro"
     page.theme_mode = "light"
-    page.bgcolor = "#F0F2F5"
     page.padding = 0
 
-    contenedor_pantalla = ft.Container(padding=20, expand=True)
+    contenedor_pantalla = ft.Container(expand=True)
 
     def obtener_totales():
         try:
             response = supabase.table("datos_app").select("horas, metros").execute()
             data = response.data
-            # Aseguramos que los valores sean números, manejando posibles Nones
             t_h = sum(float(i.get('horas', 0) or 0) for i in data)
             t_m = sum(float(i.get('metros', 0) or 0) for i in data)
             return t_h, t_m
@@ -30,20 +31,30 @@ def main(page: ft.Page):
 
     def mostrar_menu(e=None):
         h, m = obtener_totales()
-        contenedor_pantalla.content = ft.Column([
-            ft.Text("CONTROL DE OBRA", size=24, weight="bold"),
-            # Tarjeta de totales con cálculos
-            ft.Card(content=ft.Container(padding=20, content=ft.Row([
-                ft.Column([ft.Text("Total Horas ⏱"), ft.Text(str(h), size=20, weight="bold")]),
-                ft.VerticalDivider(),
-                ft.Column([ft.Text("Total Metros 📏"), ft.Text(str(m), size=20, weight="bold")])
-            ], alignment="center"))),
-            ft.ElevatedButton("NUEVO REGISTRO", icon="add", on_click=mostrar_formulario),
-            ft.ElevatedButton("VER HISTORIAL", icon="list", on_click=mostrar_historial)
-        ], alignment="center", horizontal_alignment="center")
+        
+        # Contenedor con fondo (busca fondo.jpg en la carpeta /assets)
+        contenedor_pantalla.content = ft.Container(
+            image_src="fondo.jpg",
+            image_fit="cover",
+            content=ft.Container(
+                bgcolor="rgba(0,0,0,0.5)", # Capa oscura para que el texto resalte
+                padding=20,
+                content=ft.Column([
+                    ft.Text("CONTROL DE OBRA", size=26, weight="bold", color="white"),
+                    ft.Card(content=ft.Container(padding=20, content=ft.Row([
+                        ft.Column([ft.Text("Total Horas ⏱"), ft.Text(str(h), size=20, weight="bold")]),
+                        ft.VerticalDivider(),
+                        ft.Column([ft.Text("Total Metros 📏"), ft.Text(str(m), size=20, weight="bold")])
+                    ], alignment="center"))),
+                    ft.Container(height=20),
+                    ft.ElevatedButton("NUEVO REGISTRO", icon="add", on_click=mostrar_formulario),
+                    ft.ElevatedButton("VER HISTORIAL", icon="list", on_click=mostrar_historial)
+                ], alignment="center", horizontal_alignment="center")
+            )
+        )
         page.update()
 
-    # Campos definidos para el formulario
+    # --- CAMPOS DEL FORMULARIO ---
     f_fecha = ft.TextField(label="Fecha", value="26/06/2026")
     f_horas = ft.TextField(label="Horas")
     f_metros = ft.TextField(label="Metros")
@@ -68,7 +79,7 @@ def main(page: ft.Page):
             f_fecha, f_horas, f_metros, f_material, f_lugar, f_parte, f_constr, f_comp,
             ft.ElevatedButton("GUARDAR", icon="save", on_click=guardar_registro),
             ft.ElevatedButton("← VOLVER", icon="arrow_back", on_click=mostrar_menu)
-        ], scroll="auto")
+        ], scroll="auto", padding=20)
         page.update()
 
     def mostrar_historial(e):
@@ -99,7 +110,7 @@ def main(page: ft.Page):
             ft.Text("Historial", size=20, weight="bold"),
             ft.ListView(controls=tarjetas, expand=True, spacing=10),
             ft.ElevatedButton("← VOLVER", icon="arrow_back", on_click=mostrar_menu)
-        ], expand=True)
+        ], expand=True, padding=20)
         page.update()
 
     page.add(contenedor_pantalla)
