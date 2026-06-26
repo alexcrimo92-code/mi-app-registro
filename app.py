@@ -12,10 +12,9 @@ supabase = create_client(URL, KEY)
 def main(page: ft.Page):
     page.title = "App Registro"
     page.theme_mode = "light"
-    page.vertical_alignment = "center" # Centra verticalmente todo el contenido
     
-    # Usamos una columna principal con alineación centrada
-    contenedor_pantalla = ft.Column(alignment="center", horizontal_alignment="center")
+    # Contenedor principal
+    contenedor_pantalla = ft.Column()
     page.add(contenedor_pantalla)
 
     def obtener_totales():
@@ -32,27 +31,14 @@ def main(page: ft.Page):
         contenedor_pantalla.controls.clear()
         h, m = obtener_totales()
         
-        # Tarjeta moderna creada con Container
-        tarjeta_resumen = ft.Container(
-            content=ft.Column([
-                ft.Text("MENÚ PRINCIPAL", size=24, weight="bold"),
-                ft.Text(f"⏱ Total Horas: {h}"),
-                ft.Text(f"📏 Total Metros: {m}")
-            ], alignment="center", horizontal_alignment="center"),
-            padding=20,
-            border=ft.border.all(2, "blue"),
-            border_radius=15,
-            bgcolor="#f0f8ff"
-        )
-        
-        contenedor_pantalla.controls.extend([
-            tarjeta_resumen,
-            ft.ElevatedButton("➕ NUEVO REGISTRO", on_click=mostrar_formulario),
-            ft.ElevatedButton("📋 VER HISTORIAL", on_click=mostrar_historial)
-        ])
+        contenedor_pantalla.controls.append(ft.Text("MENÚ PRINCIPAL", size=24, weight="bold"))
+        contenedor_pantalla.controls.append(ft.Text(f"Total Horas ⏱: {h}"))
+        contenedor_pantalla.controls.append(ft.Text(f"Total Metros 📏: {m}"))
+        contenedor_pantalla.controls.append(ft.ElevatedButton("NUEVO REGISTRO", on_click=mostrar_formulario))
+        contenedor_pantalla.controls.append(ft.ElevatedButton("VER HISTORIAL", on_click=mostrar_historial))
         page.update()
 
-    # Campos de formulario
+    # Campos
     f_fecha = ft.TextField(label="Fecha", value="26/06/2026")
     f_horas = ft.TextField(label="Horas")
     f_metros = ft.TextField(label="Metros")
@@ -76,35 +62,22 @@ def main(page: ft.Page):
         contenedor_pantalla.controls.extend([
             ft.Text("Nuevo Registro", size=20),
             f_fecha, f_horas, f_metros, f_material, f_lugar, f_parte, f_constr, f_comp,
-            ft.ElevatedButton("💾 GUARDAR", on_click=guardar_registro),
-            ft.ElevatedButton("🔙 VOLVER", on_click=mostrar_menu)
+            ft.ElevatedButton("GUARDAR", on_click=guardar_registro),
+            ft.ElevatedButton("VOLVER", on_click=mostrar_menu)
         ])
         page.update()
 
     def mostrar_historial(e):
         contenedor_pantalla.controls.clear()
-        contenedor_pantalla.controls.append(ft.ElevatedButton("🔙 VOLVER", on_click=mostrar_menu))
-        
+        contenedor_pantalla.controls.append(ft.ElevatedButton("VOLVER", on_click=mostrar_menu))
         try:
             res = supabase.table("datos_app").select("*").execute()
             for item in res.data:
-                # Tarjeta moderna con bordes redondeados y fondo suave
-                tarjeta = ft.Container(
-                    content=ft.Column([
-                        ft.Text(f"📅 {item.get('fecha')} | 🆔 {item.get('n_parte', 'N/A')}", weight="bold"),
-                        ft.Text(f"🏢 {item.get('constructora')} | 📍 {item.get('lugar')}"),
-                        ft.Text(f"🛠 {item.get('material instalado', 'N/A')}"),
-                        ft.Text(f"⏱ {item.get('horas')}h | 📏 {item.get('metros')}m | 👥 {item.get('companero')}")
-                    ]),
-                    padding=15,
-                    border=ft.border.all(1, "#dcdcdc"),
-                    border_radius=10,
-                    margin=10,
-                    bgcolor="white"
-                )
-                contenedor_pantalla.controls.append(tarjeta)
-        except Exception as err:
-            contenedor_pantalla.controls.append(ft.Text(f"Error: {err}"))
+                # Texto simple sin componentes complejos que fallen
+                txt = f"📅 {item.get('fecha')} | 🆔 {item.get('n_parte')} | 🛠 {item.get('material instalado')}"
+                contenedor_pantalla.controls.append(ft.Text(txt))
+        except:
+            contenedor_pantalla.controls.append(ft.Text("Error al cargar historial"))
         page.update()
 
     mostrar_menu()
