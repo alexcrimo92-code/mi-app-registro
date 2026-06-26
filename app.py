@@ -58,15 +58,17 @@ def main(page: ft.Page):
         mostrar_inicio()
 
     def mostrar_historial(e):
+      def mostrar_historial(e):
         response = supabase.table("datos_app").select("*").execute()
         tarjetas = []
         for item in response.data:
             tarjetas.append(
                 ft.Card(
+                    # El Card se ajustará automáticamente al ancho del padre
                     content=ft.Container(
                         content=ft.Column([
                             ft.ListTile(
-                                leading=ft.Icon("work"), # CORREGIDO: Usar string "work"
+                                leading=ft.Icon("work"),
                                 title=ft.Text(f"Nº Parte: {item.get('n_parte', 'N/A')}"),
                                 subtitle=ft.Text(f"Fecha: {item.get('fecha', '')}"),
                             ),
@@ -84,15 +86,25 @@ def main(page: ft.Page):
                     )
                 )
             )
+
         contenedor_principal.content = ft.Container(
+            # Configuramos el contenedor para que ocupe todo el ancho
             content=ft.Column([
                 ft.AppBar(title=ft.Text("Historial"), bgcolor="blue", color="white", 
                           leading=ft.IconButton("arrow_back", on_click=mostrar_inicio)),
-                ft.ElevatedButton("VOLVER AL MENÚ", icon="home", on_click=mostrar_inicio),
+                ft.Container(
+                    content=ft.ElevatedButton("VOLVER AL MENÚ", icon="home", on_click=mostrar_inicio),
+                    padding=ft.padding.only(left=20, right=20)
+                ),
                 ft.Divider(),
-                ft.ListView(controls=tarjetas, expand=True, spacing=10)
-            ], scroll=ft.ScrollMode.AUTO),
-            padding=20
+                # Expanded hace que la lista ocupe el resto de la pantalla y no se comprima
+                ft.Container(
+                    content=ft.ListView(controls=tarjetas, spacing=10),
+                    padding=20,
+                    expand=True 
+                )
+            ], expand=True), # El Column también debe expandirse
+            expand=True
         )
         page.update()
 
