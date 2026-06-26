@@ -8,7 +8,6 @@ KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJn
 supabase = create_client(URL, KEY)
 
 
-
 def main(page: ft.Page):
     page.title = "Registro de Trabajo"
     page.theme_mode = ft.ThemeMode.LIGHT
@@ -43,8 +42,8 @@ def main(page: ft.Page):
                           leading=ft.IconButton("arrow_back", on_click=mostrar_inicio)),
                 f_fecha, f_horas, f_metros, f_lugar, f_n_parte, f_constructora, f_companero,
                 ft.ElevatedButton("GUARDAR PARTE", icon="save", on_click=guardar_y_volver),
-                ft.OutlinedButton("CANCELAR / VOLVER", icon="close", on_click=mostrar_inicio) # <-- BOTÓN DE REGRESO
-            ], scroll=ft.ScrollMode.AUTO), # Permite scroll si el form es largo
+                ft.OutlinedButton("CANCELAR", icon="close", on_click=mostrar_inicio)
+            ], scroll=ft.ScrollMode.AUTO),
             padding=20
         )
         page.update()
@@ -58,10 +57,8 @@ def main(page: ft.Page):
         supabase.table("datos_app").insert(datos).execute()
         mostrar_inicio()
 
-   def mostrar_historial(e):
-        # Obtener datos
+    def mostrar_historial(e):
         response = supabase.table("datos_app").select("*").execute()
-        
         tarjetas = []
         for item in response.data:
             tarjetas.append(
@@ -87,24 +84,20 @@ def main(page: ft.Page):
                     )
                 )
             )
-
         contenedor_principal.content = ft.Container(
             content=ft.Column([
-                ft.AppBar(title=ft.Text("Historial de Partes"), bgcolor="blue", color="white", 
+                ft.AppBar(title=ft.Text("Historial"), bgcolor="blue", color="white", 
                           leading=ft.IconButton("arrow_back", on_click=mostrar_inicio)),
                 ft.ElevatedButton("VOLVER AL MENÚ", icon="home", on_click=mostrar_inicio),
                 ft.Divider(),
-                # Aquí mostramos la lista de tarjetas
                 ft.ListView(controls=tarjetas, expand=True, spacing=10)
             ], scroll=ft.ScrollMode.AUTO),
             padding=20
         )
         page.update()
+
     page.add(contenedor_principal)
     mostrar_inicio()
 
-ft.app(
-    target=main, 
-    view=ft.AppView.WEB_BROWSER, 
-    port=int(os.environ.get("PORT", 8080))
-)
+# Esta es la línea necesaria para que Render funcione
+ft.app(target=main, view=ft.AppView.WEB_BROWSER, port=int(os.environ.get("PORT", 8080)))
