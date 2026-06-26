@@ -15,14 +15,14 @@ def main(page: ft.Page):
 
     contenedor_pantalla = ft.Container(expand=True, padding=20)
 
-    # Función para botones premium
+    # Función corregida para botones premium (sin dependencias extrañas)
     def crear_boton_menu(texto, icono, funcion):
         return ft.Container(
             content=ft.ElevatedButton(
                 content=ft.Row([ft.Icon(icono), ft.Text(texto, size=16)], alignment=ft.MainAxisAlignment.CENTER),
                 style=ft.ButtonStyle(
                     bgcolor=ft.colors.WHITE,
-                    color=ft.colors.BLUE_700,
+                    color=ft.colors.BLUE, # Usamos el nombre del color directamente
                     padding=25,
                     shape=ft.RoundedRectangleBorder(radius=15),
                 ),
@@ -46,9 +46,9 @@ def main(page: ft.Page):
             ft.Text("CONTROL DE OBRA", size=26, weight="bold", color=ft.colors.BLUE_900),
             ft.Container(
                 content=ft.Row([
-                    ft.Column([ft.Text("Total Horas", size=12), ft.Text(f"{horas}", size=22, weight="bold")], horizontal_alignment=ft.CrossAxisAlignment.CENTER),
+                    ft.Column([ft.Text("Total Horas"), ft.Text(f"{horas}", size=22, weight="bold")], horizontal_alignment=ft.CrossAxisAlignment.CENTER),
                     ft.VerticalDivider(),
-                    ft.Column([ft.Text("Total Metros", size=12), ft.Text(f"{metros}", size=22, weight="bold")], horizontal_alignment=ft.CrossAxisAlignment.CENTER)
+                    ft.Column([ft.Text("Total Metros"), ft.Text(f"{metros}", size=22, weight="bold")], horizontal_alignment=ft.CrossAxisAlignment.CENTER)
                 ], alignment=ft.MainAxisAlignment.SPACE_EVENLY),
                 bgcolor=ft.colors.WHITE, padding=20, border_radius=20,
                 shadow=ft.BoxShadow(blur_radius=10, color=ft.colors.GREY_300)
@@ -61,7 +61,7 @@ def main(page: ft.Page):
 
     def mostrar_formulario(e):
         contenedor_pantalla.content = ft.Column([
-            ft.TextButton("← Volver", icon=ft.icons.ARROW_BACK, on_click=mostrar_menu),
+            ft.ElevatedButton("← Volver", icon=ft.icons.ARROW_BACK, on_click=mostrar_menu),
             ft.Text("Nuevo Registro", size=20, weight="bold"),
             ft.TextField(label="Fecha", value="26/06/2026"),
             ft.TextField(label="Horas"),
@@ -85,7 +85,7 @@ def main(page: ft.Page):
             tarjetas = [ft.Text("Error al cargar")]
 
         contenedor_pantalla.content = ft.Column([
-            ft.TextButton("← Volver", icon=ft.icons.ARROW_BACK, on_click=mostrar_menu),
+            ft.ElevatedButton("← Volver", icon=ft.icons.ARROW_BACK, on_click=mostrar_menu),
             ft.Text("Historial", size=20, weight="bold"),
             ft.ListView(controls=tarjetas, expand=True, spacing=10)
         ], expand=True)
