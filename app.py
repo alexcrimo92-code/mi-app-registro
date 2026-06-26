@@ -11,39 +11,34 @@ supabase = create_client(URL, KEY)
 def main(page: ft.Page):
     page.title = "Registro de Trabajo"
     page.theme_mode = ft.ThemeMode.LIGHT
-    page.vertical_alignment = ft.MainAxisAlignment.START
-    page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
-    page.bgcolor = "#F8F9FA" # Color de fondo gris claro
+    page.bgcolor = "#F8F9FA"
 
-    # --- ELEMENTOS DEL MENÚ ---
-    titulo = ft.Text("Menú Principal", size=24, weight="bold", color="#003366")
-    
-    # Botón grande para ir al formulario
-    btn_nuevo = ft.ElevatedButton(
-        "NUEVO REGISTRO", 
-        icon="add", 
-        width=250, 
-        height=50,
-        style=ft.ButtonStyle(bgcolor="#003366", color="white")
-    )
-    
-    btn_historial = ft.ElevatedButton(
-        "VER HISTORIAL", 
-        icon="list", 
-        width=250, 
-        height=50
-    )
+    # --- CONTENEDOR PRINCIPAL ---
+    contenedor_principal = ft.Container()
 
-    # Añadimos todo a la página
-    page.add(
-        ft.Container(height=20), # Espacio superior
-        titulo,
-        ft.Container(height=20),
-        btn_nuevo,
-        ft.Container(height=10),
-        btn_historial
-    )
-    
-    page.update()
+    # --- FUNCIÓN: IR AL FORMULARIO ---
+    def mostrar_formulario(e):
+        contenedor_principal.content = ft.Column([
+            ft.AppBar(title=ft.Text("Nuevo Parte"), bgcolor="blue", color="white", 
+                      leading=ft.IconButton("arrow_back", on_click=mostrar_inicio)),
+            ft.TextField(label="Fecha", value="26/06/2026"),
+            ft.TextField(label="Horas trabajadas"),
+            ft.TextField(label="Metros"),
+            ft.ElevatedButton("GUARDAR PARTE", icon="save")
+        ], padding=20)
+        page.update()
+
+    # --- FUNCIÓN: IR AL INICIO ---
+    def mostrar_inicio(e):
+        contenedor_principal.content = ft.Column([
+            ft.Text("Menú Principal", size=24, weight="bold"),
+            ft.ElevatedButton("NUEVO REGISTRO", icon="add", on_click=mostrar_formulario),
+            ft.ElevatedButton("VER HISTORIAL", icon="list")
+        ], alignment=ft.MainAxisAlignment.CENTER, horizontal_alignment=ft.CrossAxisAlignment.CENTER, padding=50)
+        page.update()
+
+    # --- INICIO ---
+    page.add(contenedor_principal)
+    mostrar_inicio(None) # Cargamos el inicio al abrir
 
 ft.app(target=main, view=ft.AppView.WEB_BROWSER)
