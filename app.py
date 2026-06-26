@@ -13,8 +13,10 @@ def main(page: ft.Page):
     page.title = "App Registro"
     page.theme_mode = "light"
     # Centrado global básico
-    page.horizontal_alignment = "center" 
+    page.vertical_alignment = "center"
+    page.horizontal_alignment = "center"
     
+    # Contenedor con alineación centrada
     contenedor_pantalla = ft.Column(alignment="center", horizontal_alignment="center")
     page.add(contenedor_pantalla)
 
@@ -28,18 +30,17 @@ def main(page: ft.Page):
         except:
             return 0, 0
 
+    # Definición de funciones para evitar "name not defined"
     def mostrar_menu(e=None):
         contenedor_pantalla.controls.clear()
         h, m = obtener_totales()
         
         # Menú centrado
-        contenedor_pantalla.controls.extend([
-            ft.Text("MENÚ PRINCIPAL", size=24, weight="bold"),
-            ft.Text(f"Total Horas ⏱: {h}"),
-            ft.Text(f"Total Metros 📏: {m}"),
-            ft.ElevatedButton("➕ NUEVO REGISTRO", on_click=mostrar_formulario),
-            ft.ElevatedButton("📋 VER HISTORIAL", on_click=mostrar_historial)
-        ])
+        contenedor_pantalla.controls.append(ft.Text("MENÚ PRINCIPAL", size=24, weight="bold"))
+        contenedor_pantalla.controls.append(ft.Text(f"Total Horas ⏱: {h}"))
+        contenedor_pantalla.controls.append(ft.Text(f"Total Metros 📏: {m}"))
+        contenedor_pantalla.controls.append(ft.ElevatedButton("➕ NUEVO REGISTRO", on_click=mostrar_formulario))
+        contenedor_pantalla.controls.append(ft.ElevatedButton("📋 VER HISTORIAL", on_click=mostrar_historial))
         page.update()
 
     def mostrar_historial(e):
@@ -49,29 +50,48 @@ def main(page: ft.Page):
         try:
             res = supabase.table("datos_app").select("*").execute()
             for item in res.data:
-                # ESTRUCTURA DE TARJETA: Título = Fecha + Parte
-                tarjeta = ft.Container(
-                    content=ft.Column([
-                        ft.Text(f"📅 {item.get('fecha', 'N/A')} - Parte Nº: {item.get('n_parte', 'N/A')}", 
-                                weight="bold", size=16),
-                        ft.Divider(),
-                        ft.Text(f"🏢 Constructora: {item.get('constructora', 'N/A')}"),
-                        ft.Text(f"📍 Lugar: {item.get('lugar', 'N/A')}"),
-                        ft.Text(f"🛠 Material: {item.get('material instalado', 'N/A')}"),
-                        ft.Text(f"⏱ {item.get('horas')}h | 📏 {item.get('metros')}m | 👥 {item.get('companero')}")
-                    ]),
-                    padding=15,
-                    border=ft.border.all(1, "grey"),
-                    border_radius=10,
-                    margin=10
-                )
+                # Usamos una estructura de tarjeta simple pero estética
+                tarjeta = ft.Column([
+                    ft.Text(f"📅 {item.get('fecha', 'N/A')} | 🆔 {item.get('n_parte', 'N/A')}", weight="bold"),
+                    ft.Text(f"🏢 {item.get('constructora', 'N/A')}"),
+                    ft.Text(f"📍 {item.get('lugar', 'N/A')}"),
+                    ft.Text(f"🛠 {item.get('material instalado', 'N/A')}"),
+                    ft.Text(f"⏱ {item.get('horas')}h | 📏 {item.get('metros')}m | 👥 {item.get('companero')}"),
+                    ft.Text("------------------------------------")
+                ], horizontal_alignment="center")
                 contenedor_pantalla.controls.append(tarjeta)
         except Exception as err:
             contenedor_pantalla.controls.append(ft.Text(f"Error: {err}"))
         page.update()
 
-    # (Funciones de formulario permanecen iguales)
-    # ... (mostrar_formulario y guardar_registro)
+    # Formulario (mismo orden que antes)
+    f_fecha = ft.TextField(label="Fecha", value="26/06/2026")
+    f_horas = ft.TextField(label="Horas")
+    f_metros = ft.TextField(label="Metros")
+    f_material = ft.TextField(label="Material instalado")
+    f_lugar = ft.TextField(label="Lugar")
+    f_parte = ft.TextField(label="Nº Parte")
+    f_constr = ft.TextField(label="Constructora")
+    f_comp = ft.TextField(label="Compañero")
+
+    def guardar_registro(e):
+        datos = {
+            "fecha": f_fecha.value, "horas": f_horas.value, "metros": f_metros.value, 
+            "material instalado": f_material.value, "lugar": f_lugar.value, 
+            "n_parte": f_parte.value, "constructora": f_constr.value, "companero": f_comp.value
+        }
+        supabase.table("datos_app").insert(datos).execute()
+        mostrar_menu()
+
+    def mostrar_formulario(e):
+        contenedor_pantalla.controls.clear()
+        contenedor_pantalla.controls.extend([
+            ft.Text("Nuevo Registro", size=20),
+            f_fecha, f_horas, f_metros, f_material, f_lugar, f_parte, f_constr, f_comp,
+            ft.ElevatedButton("💾 GUARDAR", on_click=guardar_registro),
+            ft.ElevatedButton("🔙 VOLVER", on_click=mostrar_menu)
+        ])
+        page.update()
 
     mostrar_menu()
 
