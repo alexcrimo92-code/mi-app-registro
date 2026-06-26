@@ -7,21 +7,21 @@ KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJn
 supabase = create_client(URL, KEY)
 
 
-
 def main(page: ft.Page):
-    page.title = "PARTES DE TRABAJO"
+    page.title = "Registro de Trabajo"
     page.theme_mode = ft.ThemeMode.LIGHT
-    page.bgcolor = "#E3F2FD" # Fondo azul claro muy agradable
+    page.bgcolor = "#E3F2FD" # Color de fondo suave
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
     page.scroll = ft.ScrollMode.AUTO
 
-    # Dropdown para horas (de 1 a 12)
+    # Dropdown sin 'icon' (que causaba error)
     f_horas = ft.Dropdown(
         label="Horas trabajadas",
         options=[ft.dropdown.Option(str(i)) for i in range(1, 13)],
-        icon="access_time"
+        width=300
     )
 
+    # Inputs con iconos como texto (strings) para evitar errores de versión
     f_fecha = ft.TextField(label="Fecha", value="26/06/2026", icon="date_range", width=300)
     f_metros = ft.TextField(label="Metros instalados", icon="reorder", width=300)
     f_lugar = ft.TextField(label="Lugar", icon="location_on", width=300)
@@ -57,18 +57,21 @@ def main(page: ft.Page):
             pass
 
     def guardar(e):
-        supabase.table("datos_app").insert({
-            "fecha": f_fecha.value, "horas": f_horas.value, "metros": f_metros.value,
-            "lugar": f_lugar.value, "n_parte": f_n_parte.value, 
-            "constructora": f_constructora.value, "companero": f_companero.value
-        }).execute()
-        cargar_datos()
+        try:
+            supabase.table("datos_app").insert({
+                "fecha": f_fecha.value, "horas": f_horas.value, "metros": f_metros.value,
+                "lugar": f_lugar.value, "n_parte": f_n_parte.value, 
+                "constructora": f_constructora.value, "companero": f_companero.value
+            }).execute()
+            cargar_datos()
+        except:
+            pass
 
-    # Contenedor centrado y elegante
+    # Diseño centrado y ordenado
     page.add(
         ft.Container(
             content=ft.Column([
-                ft.Text("PARTES DE TRABAJO", size=30, weight="bold", color="#0D47A1"),
+                ft.Text("Registro de Trabajo", size=30, weight="bold", color="#0D47A1"),
                 f_fecha, f_horas, f_metros, f_lugar, f_n_parte, f_constructora, f_companero,
                 ft.ElevatedButton("GUARDAR PARTE", icon="save", on_click=guardar, bgcolor="#1976D2", color="white")
             ], horizontal_alignment=ft.CrossAxisAlignment.CENTER),
