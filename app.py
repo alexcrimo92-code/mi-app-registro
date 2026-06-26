@@ -6,7 +6,6 @@ URL = "https://bggzywzlusinkwwkwzgj.supabase.co"
 KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJnZ3p5d3psdXNpbmt3d2t3emdqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI0MDMxNjMsImV4cCI6MjA5Nzk3OTE2M30.GtEiVvBZXeAYKap7YOK-CxNmUBHIoxxkJjVV4QyJp4c"
 supabase = create_client(URL, KEY)
 
-
 def main(page: ft.Page):
     # Diseño simplificado que funciona en versiones antiguas y nuevas
     page.title = "Registro de Trabajo"
