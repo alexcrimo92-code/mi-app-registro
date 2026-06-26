@@ -13,23 +13,22 @@ def main(page: ft.Page):
     page.bgcolor = "#F0F2F5"
     page.padding = 0
 
-    # Contenedor principal
     contenedor_pantalla = ft.Container(expand=True, padding=20)
 
-    # Función para botones con estilo (usando strings para colores y nombres de iconos)
-    def crear_boton_menu(texto, icono, funcion):
+    # Función para botones con estilo (usando parámetros básicos)
+    def crear_boton_menu(texto, icono_nombre, funcion):
         return ft.Container(
             content=ft.ElevatedButton(
-                content=ft.Row([ft.Icon(name=icono), ft.Text(texto, size=16)], alignment="center"),
+                # Usamos una estructura simple de texto e icono para evitar errores de tipo
+                text=texto,
+                icon=icono_nombre, 
+                on_click=funcion,
                 style=ft.ButtonStyle(
-                    bgcolor="white",
-                    color="blue",
-                    padding=25,
+                    padding=20,
                     shape=ft.RoundedRectangleBorder(radius=15),
                 ),
-                on_click=funcion,
             ),
-            shadow=ft.BoxShadow(blur_radius=10, color="grey")
+            padding=5
         )
 
     def obtener_totales():
@@ -44,19 +43,19 @@ def main(page: ft.Page):
     def mostrar_menu(e=None):
         horas, metros = obtener_totales()
         contenedor_pantalla.content = ft.Column([
-            ft.Text("CONTROL DE OBRA", size=26, weight="bold", color="blue"),
+            ft.Text("CONTROL DE OBRA", size=26, weight="bold"),
+            # Tarjeta de totales sin 'color' ni atributos complejos
             ft.Container(
                 content=ft.Row([
-                    ft.Column([ft.Text("Total Horas"), ft.Text(f"{horas}", size=22, weight="bold")], horizontal_alignment="center"),
+                    ft.Column([ft.Text("Total Horas"), ft.Text(f"{horas}", size=22, weight="bold")]),
                     ft.VerticalDivider(),
-                    ft.Column([ft.Text("Total Metros"), ft.Text(f"{metros}", size=22, weight="bold")], horizontal_alignment="center")
-                ], alignment="spaceEvenly"),
-                bgcolor="white", padding=20, border_radius=20,
-                shadow=ft.BoxShadow(blur_radius=10, color="grey")
+                    ft.Column([ft.Text("Total Metros"), ft.Text(f"{metros}", size=22, weight="bold")])
+                ], alignment="center"),
+                bgcolor="white", padding=20, border_radius=20
             ),
             ft.Container(height=20),
-            crear_boton_menu("NUEVO REGISTRO", "add_circle_outline", mostrar_formulario),
-            crear_boton_menu("VER HISTORIAL", "list_alt", mostrar_historial)
+            crear_boton_menu("NUEVO REGISTRO", "add", mostrar_formulario),
+            crear_boton_menu("VER HISTORIAL", "history", mostrar_historial)
         ], alignment="center", horizontal_alignment="center")
         page.update()
 
@@ -81,9 +80,9 @@ def main(page: ft.Page):
                 ft.Text(f"📍 {item.get('lugar', 'N/A')}"),
                 ft.Text(f"⏱ {item.get('horas', '0')} hrs | 📏 {item.get('metros', '0')} m"),
                 ft.Text(f"👥 {item.get('companero', 'N/A')}")
-            ], spacing=8, horizontal_alignment="start"))) for item in response.data]
+            ]))) for item in response.data]
         except:
-            tarjetas = [ft.Text("Error al cargar datos")]
+            tarjetas = [ft.Text("Error al cargar")]
 
         contenedor_pantalla.content = ft.Column([
             ft.ElevatedButton("← Volver", icon="arrow_back", on_click=mostrar_menu),
