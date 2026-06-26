@@ -11,75 +11,54 @@ supabase = create_client(URL, KEY)
 def main(page: ft.Page):
     page.title = "Registro de Trabajo"
     page.theme_mode = ft.ThemeMode.LIGHT
-    page.bgcolor = "#E3F2FD" 
-    page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
+    page.padding = 0
 
-    # Iconos definidos como texto plano para evitar errores de módulos
-    f_fecha = ft.TextField(label="Fecha", value="26/06/2026", icon="date_range", width=300)
-    f_horas = ft.Dropdown(
-        label="Horas trabajadas",
-        options=[ft.dropdown.Option(str(i)) for i in range(1, 13)],
-        width=300
+    # --- FUNCIONES DE NAVEGACIÓN ---
+    def ir_a_formulario(e):
+        page.views.append(vista_formulario)
+        page.update()
+
+    def volver_al_inicio(e):
+        page.views.pop()
+        page.update()
+
+    # --- VISTA 1: MENÚ DE INICIO ---
+    vista_inicio = ft.View(
+        "/",
+        [
+            ft.AppBar(title=ft.Text("Inicio"), bgcolor=ft.colors.BLUE_900, color="white"),
+            ft.Container(
+                content=ft.Column([
+                    ft.Text("Bienvenido", size=24, weight="bold"),
+                    ft.Text("Resumen de Junio 2026", size=16),
+                    ft.ElevatedButton("NUEVO PARTE", icon=ft.icons.ADD, on_click=ir_a_formulario, width=200),
+                    ft.ElevatedButton("VER HISTORIAL", icon=ft.icons.LIST, width=200)
+                ], alignment=ft.MainAxisAlignment.CENTER, horizontal_alignment=ft.CrossAxisAlignment.CENTER),
+                padding=20
+            )
+        ]
     )
-    f_metros = ft.TextField(label="Metros instalados", icon="reorder", width=300)
-    f_lugar = ft.TextField(label="Lugar", icon="location_on", width=300)
-    f_n_parte = ft.TextField(label="Nº Parte", icon="tag", width=300)
-    f_constructora = ft.TextField(label="Constructora", icon="business", width=300)
-    f_companero = ft.TextField(label="Compañero", icon="person", width=300)
 
-    tabla = ft.DataTable(
-        columns=[
-            ft.DataColumn(ft.Text("Parte")),
-            ft.DataColumn(ft.Text("Lugar")),
-            ft.DataColumn(ft.Text("Horas")),
-        ],
-        rows=[]
+    # --- VISTA 2: FORMULARIO (Sin viáticos) ---
+    f_fecha = ft.TextField(label="Fecha", value="26/06/2026")
+    f_horas = ft.TextField(label="Horas trabajadas")
+    f_lugar = ft.TextField(label="Lugar")
+    
+    vista_formulario = ft.View(
+        "/formulario",
+        [
+            ft.AppBar(title=ft.Text("Nuevo Parte"), bgcolor=ft.colors.BLUE_900, color="white", leading=ft.IconButton(ft.icons.ARROW_BACK, on_click=volver_al_inicio)),
+            ft.Container(
+                content=ft.Column([
+                    f_fecha, f_horas, f_lugar,
+                    ft.ElevatedButton("GUARDAR PARTE", on_click=lambda e: print("Guardado"))
+                ]),
+                padding=20
+            )
+        ]
     )
 
-    def cargar_datos(e=None):
-        try:
-            response = supabase.table("datos_app").select("*").execute()
-            tabla.rows.clear()
-            for i in response.data:
-                tabla.rows.append(ft.DataRow(cells=[
-                    ft.DataCell(ft.Text(str(i.get("n_parte", "")))),
-                    ft.DataCell(ft.Text(i.get("lugar", ""))),
-                    ft.DataCell(ft.Text(str(i.get("horas", "")))),
-                ]))
-            page.update()
-        except:
-            pass
+    page.views.append(vista_inicio)
+    page.update()
 
-    def guardar(e):
-        try:
-            supabase.table("datos_app").insert({
-                "fecha": f_fecha.value, "horas": f_horas.value, "metros": f_metros.value,
-                "lugar": f_lugar.value, "n_parte": f_n_parte.value, 
-                "constructora": f_constructora.value, "companero": f_companero.value
-            }).execute()
-            cargar_datos()
-        except Exception as err:
-            print(f"Error: {err}")
-
-    # Diseño básico sin componentes complejos que puedan fallar
-    page.add(
-        ft.Container(
-            content=ft.Column([
-                ft.Text("Registro de Trabajo", size=24, weight="bold", color="#0D47A1"),
-                f_fecha, f_horas, f_metros, f_lugar, f_n_parte, f_constructora, f_companero,
-                ft.ElevatedButton("GUARDAR PARTE", icon="save", on_click=guardar)
-            ], horizontal_alignment=ft.CrossAxisAlignment.CENTER),
-            bgcolor="white", padding=20, border_radius=10, width=400
-        ),
-        ft.Container(
-            content=ft.Column([
-                ft.Text("Partes registrados", weight="bold"),
-                tabla 
-            ]),
-            bgcolor="white", padding=20, border_radius=10, margin=10
-        )
-    )
-    cargar_datos()
-
-if __name__ == "__main__":
-    ft.app(target=main)
+ft.app(target=main, view=ft.AppView.WEB_BROWSER)
