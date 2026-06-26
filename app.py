@@ -10,10 +10,13 @@ supabase = create_client(URL, KEY)
 
 
 def main(page: ft.Page):
+    page.assets_dir = "assets"
     page.title = "App Registro"
     page.theme_mode = "light"
+    page.padding = 0
 
-    contenedor_pantalla = ft.Column()
+    # Usamos un Stack como contenedor principal
+    contenedor_pantalla = ft.Stack(expand=True)
     page.add(contenedor_pantalla)
 
     def obtener_totales():
@@ -30,22 +33,24 @@ def main(page: ft.Page):
         contenedor_pantalla.controls.clear()
         h, m = obtener_totales()
         
-        # Tarjeta visual (usando Container para máxima compatibilidad)
-        tarjeta = ft.Container(
-            content=ft.Column([
+        # 1. Capa de imagen (fondo)
+        fondo = ft.Image(src="fondo.jpg", fit="cover", width=page.width, height=page.height)
+        
+        # 2. Capa de contenido (menú)
+        contenido = ft.Column([
+            ft.Container(content=ft.Column([
                 ft.Text("MENÚ PRINCIPAL", size=24, weight="bold"),
                 ft.Text(f"Total Horas ⏱: {h}"),
                 ft.Text(f"Total Metros 📏: {m}"),
-            ]),
-            border=ft.border.all(1, "black"),
-            border_radius=10,
-            padding=20
-        )
-        
-        contenedor_pantalla.controls.extend([tarjeta, ft.ElevatedButton("NUEVO REGISTRO", on_click=mostrar_formulario), ft.ElevatedButton("VER HISTORIAL", on_click=mostrar_historial)])
+            ]), bgcolor="white", padding=20, border_radius=10),
+            ft.ElevatedButton("NUEVO REGISTRO", on_click=mostrar_formulario),
+            ft.ElevatedButton("VER HISTORIAL", on_click=mostrar_historial)
+        ], alignment="center", horizontal_alignment="center")
+
+        contenedor_pantalla.controls.extend([fondo, contenido])
         page.update()
 
-    # --- CAMPOS ---
+    # --- CAMPOS (Igual que antes) ---
     f_fecha = ft.TextField(label="Fecha", value="26/06/2026")
     f_horas = ft.TextField(label="Horas")
     f_metros = ft.TextField(label="Metros")
@@ -66,16 +71,23 @@ def main(page: ft.Page):
 
     def mostrar_formulario(e):
         contenedor_pantalla.controls.clear()
-        contenedor_pantalla.controls.extend([ft.Text("Nuevo Registro"), f_fecha, f_horas, f_metros, f_material, f_lugar, f_parte, f_constr, f_comp, ft.ElevatedButton("GUARDAR", on_click=guardar_registro), ft.ElevatedButton("VOLVER", on_click=mostrar_menu)])
+        formulario = ft.Column([
+            ft.Text("Nuevo Registro"), f_fecha, f_horas, f_metros, f_material, 
+            f_lugar, f_parte, f_constr, f_comp, 
+            ft.ElevatedButton("GUARDAR", on_click=guardar_registro), 
+            ft.ElevatedButton("VOLVER", on_click=mostrar_menu)
+        ], scroll="auto")
+        contenedor_pantalla.controls.append(formulario)
         page.update()
 
     def mostrar_historial(e):
         contenedor_pantalla.controls.clear()
-        contenedor_pantalla.controls.append(ft.ElevatedButton("VOLVER", on_click=mostrar_menu))
+        lista = ft.Column(scroll="auto")
+        lista.controls.append(ft.ElevatedButton("VOLVER", on_click=mostrar_menu))
+        
         try:
             res = supabase.table("datos_app").select("*").execute()
             for item in res.data:
-                # La tarjeta de historial
                 tarjeta = ft.Container(
                     content=ft.Column([
                         ft.Text(f"📅 {item.get('fecha')} | Parte: {item.get('n_parte', 'N/A')}", weight="bold"),
@@ -84,12 +96,13 @@ def main(page: ft.Page):
                         ft.Text(f"👥 {item.get('companero')}")
                     ]),
                     border=ft.border.all(1, "grey"),
-                    border_radius=5,
                     padding=10
                 )
-                contenedor_pantalla.controls.append(tarjeta)
+                lista.controls.append(tarjeta)
         except:
-            contenedor_pantalla.controls.append(ft.Text("Error al cargar"))
+            lista.controls.append(ft.Text("Error al cargar"))
+            
+        contenedor_pantalla.controls.append(lista)
         page.update()
 
     mostrar_menu()
