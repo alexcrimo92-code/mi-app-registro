@@ -20,6 +20,7 @@ def main(page: ft.Page):
 
     # Esta función también debe tener EXACTAMENTE 4 espacios de sangría
     def mostrar_menu(e=None):
+    # Todo lo que está debajo de 'def' debe tener una sangría (4 espacios)
     contenedor_pantalla.content = ft.Stack([
         # Capa 1: Fondo
         ft.Image(
@@ -28,13 +29,13 @@ def main(page: ft.Page):
             height=page.height,
             fit="cover"
         ),
-        # Capa 2: Contenido (Contenedor que ocupa toda la pantalla)
+        # Capa 2: Contenido
         ft.Container(
             expand=True,
             content=ft.Column(
                 [
                     ft.Text("Menú Principal", size=28, weight="bold", color="white"),
-                    ft.Container(height=20), # Espacio entre título y botones
+                    ft.Container(height=20),
                     ft.ElevatedButton(
                         "NUEVO REGISTRO", 
                         icon="add", 
@@ -48,8 +49,8 @@ def main(page: ft.Page):
                         style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=20))
                     ),
                 ],
-                alignment="center", # Alineación vertical
-                horizontal_alignment="center", # Alineación horizontal
+                alignment="center",
+                horizontal_alignment="center",
             ),
         )
     ])
