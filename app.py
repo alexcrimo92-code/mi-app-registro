@@ -34,16 +34,17 @@ def main(page: ft.Page):
             ft.Container(
                 content=ft.Column(
                     [
-                        ft.Text("Menú Principal", size=28, weight="bold", color="white"), # Texto blanco para contrastar
+                        ft.Text("Menú Principal", size=28, weight="bold", color="white"),
                         ft.Container(height=20),
-                        ft.ElevatedButton("NUEVO REGISTRO", icon="ADD", on_click=mostrar_formulario),
-                        ft.ElevatedButton("VER PARTES", icon="HISTORY", on_click=mostrar_historial),
+                        ft.ElevatedButton("NUEVO REGISTRO", icon="add", on_click=mostrar_formulario),
+                        ft.ElevatedButton("VER PARTES", icon="history", on_click=mostrar_historial),
                     ],
                     alignment="center",
                     horizontal_alignment="center"
                 ),
                 alignment="center",
-                bgcolor=ft.colors.with_opacity(0.3, "black"), # CAPA SEMITRANSPARENTE oscura para que los botones se lean bien
+                # Si quieres un fondo oscuro semitransparente, usa rgba en lugar de ft.colors:
+                bgcolor="rgba(0,0,0,0.5)", 
                 padding=20,
                 border_radius=10,
                 expand=True
