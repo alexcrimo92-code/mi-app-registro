@@ -7,19 +7,22 @@ def main(page: ft.Page):
         page.clean()
         page.add(
             ft.Stack([
-                # Imagen de fondo
-                ft.Image(
-                    src="fondo.jpg",
-                    width=page.width,
-                    height=page.height,
-                    fit="cover"
-                ),
-                # Usamos un Container con alineación por string
+                ft.Image(src="fondo.jpg", width=page.width, height=page.height, fit="cover"),
+                
                 ft.Container(
                     expand=True,
-                    alignment="center", # ESTO ES UN STRING, NO DARA ERROR DE ATRIBUTO
+                    alignment="center", # Centrado absoluto
                     content=ft.Column(
                         [
+                            # NUEVA FILA PARA LOS DATOS (Izquierda y Derecha)
+                            ft.Row(
+                                [
+                                    ft.Container(content=ft.Text("Horas: 0", color="white"), padding=10),
+                                    ft.Container(content=ft.Text("Metros: 0", color="white"), padding=10),
+                                ],
+                                alignment="center", # Centra los dos contenedores en la fila
+                            ),
+                            
                             ft.Text("Menú Principal", size=28, weight="bold", color="white"),
                             ft.Container(height=20),
                             ft.ElevatedButton("NUEVO REGISTRO", icon="add"),
