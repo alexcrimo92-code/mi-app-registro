@@ -20,28 +20,40 @@ def main(page: ft.Page):
 
     # Esta función también debe tener EXACTAMENTE 4 espacios de sangría
     def mostrar_menu(e=None):
-        contenedor_pantalla.content = ft.Stack([
-            # Capa 1: Fondo
-            ft.Image(
-                src="fondo.jpg",
-                width=page.width,
-                height=page.height,
-                fit="cover"
+    contenedor_pantalla.content = ft.Stack([
+        # Capa 1: Fondo
+        ft.Image(
+            src="fondo.jpg",
+            width=page.width,
+            height=page.height,
+            fit="cover"
+        ),
+        # Capa 2: Contenido (Contenedor que ocupa toda la pantalla)
+        ft.Container(
+            expand=True,
+            content=ft.Column(
+                [
+                    ft.Text("Menú Principal", size=28, weight="bold", color="white"),
+                    ft.Container(height=20), # Espacio entre título y botones
+                    ft.ElevatedButton(
+                        "NUEVO REGISTRO", 
+                        icon="add", 
+                        on_click=mostrar_formulario,
+                        style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=20))
+                    ),
+                    ft.ElevatedButton(
+                        "VER PARTES", 
+                        icon="history", 
+                        on_click=mostrar_historial,
+                        style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=20))
+                    ),
+                ],
+                alignment="center", # Alineación vertical
+                horizontal_alignment="center", # Alineación horizontal
             ),
-            # Capa 2: Contenido
-            ft.Container(
-                content=ft.Column(
-                   [
-        ft.Text("Menú Principal", size=28, weight="bold", color="white"),
-        ft.ElevatedButton("NUEVO REGISTRO", icon="ADD", on_click=mostrar_formulario),
-        ft.ElevatedButton("VER PARTES", icon="HISTORY", on_click=mostrar_historial),
-    ],
-    alignment=ft.MainAxisAlignment.CENTER,
-    horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                ),
-            )
-        ])
-        page.update()   
+        )
+    ])
+    page.update()   
 
     def mostrar_formulario(e):
         # Usamos Column con scroll para evitar problemas en pantallas pequeñas
