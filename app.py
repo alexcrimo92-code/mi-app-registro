@@ -10,7 +10,7 @@ supabase = create_client(URL, KEY)
 
 
 def main(page: ft.Page):
-    page.title = "Registro de Trabajo"
+    page.title = "Registro de Partes de Trabajo"
     page.theme_mode = ft.ThemeMode.LIGHT
     page.bgcolor = "#F8F9FA"
 
@@ -22,7 +22,7 @@ def main(page: ft.Page):
             ft.Text("Menú Principal", size=28, weight="bold"),
             ft.Container(height=20),
             ft.ElevatedButton("NUEVO REGISTRO", icon="ADD", on_click=mostrar_formulario),
-            ft.ElevatedButton("VER HISTORIAL", icon="HISTORY", on_click=mostrar_historial)
+            ft.ElevatedButton("VER PARTES", icon="HISTORY", on_click=mostrar_historial)
         ], alignment=ft.MainAxisAlignment.CENTER, horizontal_alignment=ft.CrossAxisAlignment.CENTER)
         page.update()
 
@@ -32,15 +32,20 @@ def main(page: ft.Page):
             ft.Text("Nuevo Registro", size=24, weight="bold"),
             ft.TextField(label="Fecha", value="26/06/2026"),
             ft.TextField(label="Nº Parte"),
-            ft.TextField(label="Constructora"),
-            ft.TextField(label="Lugar"),
             ft.TextField(label="Horas"),
             ft.TextField(label="Metros"),
+            ft.TextField(label="Material Instalado"),
+            ft.TextField(label="Direccion"), 
+            ft.TextField(label="Constructora"),
             ft.TextField(label="Compañero"),
+            
+          
+            
             ft.ElevatedButton("GUARDAR", icon="SAVE", on_click=mostrar_menu),
             ft.Divider(),
             # BOTÓN ABAJO
-            ft.ElevatedButton("← VOLVER AL MENÚ", icon="HOME", on_click=mostrar_menu)
+
+            ft.ElevatedButton("← MENÚ", icon="HOME", on_click=mostrar_menu)
         ], scroll=ft.ScrollMode.AUTO, alignment=ft.MainAxisAlignment.START)
         page.update()
 
@@ -58,8 +63,10 @@ def main(page: ft.Page):
                                 ft.Divider(),
                                 ft.Text(f"🏢 {item.get('constructora', 'N/A')}"),
                                 ft.Text(f"📍 {item.get('lugar', 'N/A')}"),
-                                ft.Text(f"⏱ {item.get('horas', '0')} hrs | 📏 {item.get('metros', '0')} m"),
+                                ft.Text(f"⏱ {item.get('horas', '0')} hrs 
+                                ft.Text(f" 📏 {item.get('metros', '0')} m") | 🛠 {item.get('material instalado', 'N/A')}
                             ], spacing=5),
+
                             padding=15
                         )
                     )
