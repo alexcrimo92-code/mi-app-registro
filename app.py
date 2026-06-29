@@ -3,27 +3,20 @@ import flet as ft
 def main(page: ft.Page):
     page.padding = 0
     
-    # Función para crear botones uniformes
-    def crear_boton(texto, icono):
+    # Esta versión es la más compatible y sencilla
+    def crear_boton(texto, icono_nombre):
         return ft.ElevatedButton(
-            content=ft.Row(
-                [
-                    ft.Icon(name=icono, size=20),
-                    ft.Text(value=texto)
-                ],
-                alignment=ft.MainAxisAlignment.CENTER,
-            ),
+            text=texto,       # 'text' es correcto aquí
+            icon=icono_nombre, # 'icon' es correcto aquí (pasa el nombre como string)
             width=140,
             height=50,
         )
 
-    # Contenido principal
     menu_content = ft.Column(
         [
             ft.Text("Menú Principal", size=33, weight="bold", color="white"),
             ft.Container(height=20),
             
-            # Filas de botones
             ft.Row([crear_boton("NUEVO", "add"), crear_boton("PDF", "picture_as_pdf")], 
                    alignment=ft.MainAxisAlignment.CENTER),
             ft.Row([crear_boton("HISTORIAL", "history"), crear_boton("USUARIO", "person")], 
