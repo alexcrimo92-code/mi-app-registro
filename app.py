@@ -56,19 +56,23 @@ def main(page: ft.Page):
             for item in response.data:
                 tarjetas.append(
                     ft.Card(
-                        content=ft.Container(
-                            content=ft.Column([
-                                ft.Text(f"PARTE: {item.get('n_parte', 'N/A')}", weight="bold", color="blue"),
-                                ft.Text(f"Fecha: {item.get('fecha', '')}"),
-                                ft.Divider(),
-                                ft.Text(f"🏢 {item.get('constructora', 'N/A')}"),
-                                ft.Text(f"📍 {item.get('lugar', 'N/A')}"),
-                             
-ft.Text(f"⏱ {item.get('horas', '0')} hrs"),
-ft.Text(f"📏 {item.get('metros', '0')} m | 🛠 {item.get('material', 'N/A')}") 
-                            ], spacing=5),
-
-                            padding=15
+    content=ft.Container(
+        content=ft.Column([
+            ft.Text(f"PARTE: {item.get('n_parte', 'N/A')}", weight="bold", color="blue"),
+            ft.Text(f"Fecha: {item.get('fecha', '')}"),
+            ft.Divider(),
+            ft.Text(f"🏢 {item.get('constructora', 'N/A')}"),
+            ft.Text(f"📍 {item.get('lugar', 'N/A')}"),
+            ft.Text(f"⏱ {item.get('horas', '0')} hrs"),
+            # Aquí está la corrección:
+            ft.Row([
+                ft.Text(f"📏 {item.get('metros', '0')} m"),
+                ft.Text("|"),
+                # Asegúrate de que el nombre aquí coincida exactamente con tu columna en Supabase
+                ft.Text(f"🛠 {item.get('material instalado', 'N/A')}") 
+            ])
+        ], spacing=5),
+        padding=15
                         )
                     )
                 )
