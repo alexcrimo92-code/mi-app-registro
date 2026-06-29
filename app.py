@@ -20,34 +20,30 @@ def main(page: ft.Page):
 
     # Esta función también debe tener EXACTAMENTE 4 espacios de sangría
     def mostrar_menu(e=None):
-        # El contenido de la función debe tener 8 espacios
         contenedor_pantalla.content = ft.Stack([
-            # CAPA 1: Imagen de fondo
+            # 1. Imagen de fondo
             ft.Image(
                 src="fondo.jpg",
                 width=page.width,
                 height=page.height,
                 fit="cover",
             ),
-            
-            # CAPA 2: Contenedor de botones (Transparente)
+            # 2. Contenedor de control (con color sólido para probar)
             ft.Container(
                 content=ft.Column(
                     [
-                        ft.Text("Menú Principal", size=28, weight="bold", color="white"),
-                        ft.Container(height=20),
-                        ft.ElevatedButton("NUEVO REGISTRO", icon="add", on_click=mostrar_formulario),
-                        ft.ElevatedButton("VER PARTES", icon="history", on_click=mostrar_historial),
+                        ft.Text("MENÚ PRINCIPAL", size=30, weight="bold", color="blue"), # Texto azul fuerte
+                        ft.ElevatedButton("NUEVO REGISTRO", icon="add"),
+                        ft.ElevatedButton("VER PARTES", icon="history"),
                     ],
                     alignment="center",
-                    horizontal_alignment="center"
+                    horizontal_alignment="center",
                 ),
+                bgcolor="white", # Fondo blanco sólido para ver si aparecen
+                opacity=0.9,     # Casi opaco para que se vea bien
+                padding=40,
                 alignment="center",
-                # Si quieres un fondo oscuro semitransparente, usa rgba en lugar de ft.colors:
-                bgcolor="rgba(0,0,0,0.5)", 
-                padding=20,
-                border_radius=10,
-                expand=True
+                expand=True,
             )
         ])
         page.update()
