@@ -33,9 +33,8 @@ def main(page: ft.Page):
                     ft.Text("Menú Principal", size=28, weight="bold", color="white"),
                     ft.ElevatedButton("NUEVO REGISTRO", icon="ADD", on_click=mostrar_formulario),
                     ft.ElevatedButton("VER PARTES", icon="HISTORY", on_click=mostrar_historial),
-                ], alignment=ft.MainAxisAlignment.CENTER, horizontal_alignment=ft.CrossAxisAlignment.CENTER),
-                # AQUI ESTA EL CAMBIO:
-                alignment=ft.alignment.center, # Esto centra el contenido en el Stack
+                ], alignment=ft.MainAxisAlignment.CENTER,
+    horizontal_alignment=ft.CrossAxisAlignment.CENTER,
             )
         ])
         page.update()    
