@@ -14,7 +14,10 @@ def main(page: ft.Page):
     page.theme_mode = ft.ThemeMode.LIGHT
     page.bgcolor = "#F8F9FA"
 
-contenedor_pantalla = ft.Container(expand=True, padding=10)
+    # Esta línea ahora tiene 4 espacios de indentación (correcta)
+    contenedor_pantalla = ft.Container(expand=True, padding=10)
+
+    # Esta línea también tiene 4 espacios, igual que la de arriba
     def mostrar_menu(e=None):
         contenedor_pantalla.content = ft.Column([
             # --- NUEVA IMAGEN ---
