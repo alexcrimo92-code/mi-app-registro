@@ -19,8 +19,9 @@ def main(page: ft.Page):
     contenedor_pantalla = ft.Container(expand=True, padding=0)
 
     # Esta función también debe tener EXACTAMENTE 4 espacios de sangría
-    def mostrar_menu(e=None):
-    # Todo lo que está debajo de 'def' debe tener una sangría (4 espacios)
+    # Línea 22
+def mostrar_menu(e=None):
+    # Asegúrate de que TODAS estas líneas tengan 4 espacios de margen a la izquierda
     contenedor_pantalla.content = ft.Stack([
         # Capa 1: Fondo
         ft.Image(
