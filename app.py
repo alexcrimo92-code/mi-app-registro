@@ -7,16 +7,17 @@ def main(page: ft.Page):
         page.clean()
         page.add(
             ft.Stack([
+                # Imagen de fondo
                 ft.Image(
                     src="fondo.jpg",
                     width=page.width,
                     height=page.height,
                     fit="cover"
                 ),
-                # El secreto es usar 'alignment' en el contenedor que contiene la columna
+                # El contenedor que fuerza el centrado absoluto
                 ft.Container(
                     expand=True,
-                    alignment=ft.alignment.center, # <--- Fuerza el centro absoluto
+                    alignment=ft.alignment.center, # Alineación del contenedor
                     content=ft.Column(
                         [
                             ft.Text("Menú Principal", size=28, weight="bold", color="white"),
@@ -24,10 +25,10 @@ def main(page: ft.Page):
                             ft.ElevatedButton("NUEVO REGISTRO", icon="add"),
                             ft.ElevatedButton("VER PARTES", icon="history"),
                         ],
-                        # Alineación interna de la columna
+                        # Alineación dentro de la columna
                         alignment="center",
                         horizontal_alignment="center",
-                        tight=True, # Importante: Columna ajustada a su contenido
+                        tight=True,
                     ),
                 )
             ])
