@@ -10,7 +10,7 @@ def main(page: ft.Page):
     
     contenido_centrado = ft.Container(
         expand=True,
-        alignment=ft.alignment.center, 
+        alignment=ft.alignment.Alignment(0, 0), 
         content=ft.Column(
             [
                 ft.Text("Menú Principal", size=33, weight="bold", color="white"),
