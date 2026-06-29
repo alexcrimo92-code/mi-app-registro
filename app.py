@@ -19,23 +19,27 @@ def main(page: ft.Page):
 
     # Esta línea también tiene 4 espacios, igual que la de arriba
     def mostrar_menu(e=None):
-        contenedor_pantalla.content = ft.Column([
-            # --- NUEVA IMAGEN ---
+        contenedor_pantalla.content = ft.Stack([
+            # CAPA 1: Imagen de fondo (ocupa todo el espacio)
             ft.Image(
                 src="fondo.jpg",
-                width=300,
-                height=200,
-                fit="contain", 
-                border_radius=10,
+                width=page.width,
+                height=page.height,
+                fit="cover", # Ahora sí funcionará con la versión actualizada
             ),
-            ft.Container(height=10),
-            ft.Text("Menú Principal", size=28, weight="bold", color="blue"),
-            ft.Container(height=20),
-            ft.ElevatedButton("NUEVO REGISTRO", icon="ADD", on_click=mostrar_formulario),
-            ft.ElevatedButton("VER PARTES", icon="HISTORY", on_click=mostrar_historial)
-        ], alignment=ft.MainAxisAlignment.CENTER, horizontal_alignment=ft.CrossAxisAlignment.CENTER)
-        page.update()
-    
+            
+            # CAPA 2: Contenedor con los botones (centrado sobre la imagen)
+            ft.Container(
+                content=ft.Column([
+                    ft.Text("Menú Principal", size=28, weight="bold", color="white"),
+                    ft.Container(height=20),
+                    ft.ElevatedButton("NUEVO REGISTRO", icon="ADD", on_click=mostrar_formulario),
+                    ft.ElevatedButton("VER PARTES", icon="HISTORY", on_click=mostrar_historial),
+                ], alignment=ft.MainAxisAlignment.CENTER, horizontal_alignment=ft.CrossAxisAlignment.CENTER),
+                alignment=ft.alignment.center, # Esto centra el contenido en el Stack
+            )
+        ])
+        page.update()    
     def mostrar_formulario(e):
         # Usamos Column con scroll para evitar problemas en pantallas pequeñas
         contenedor_pantalla.content = ft.Column([
