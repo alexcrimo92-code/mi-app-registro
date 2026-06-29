@@ -3,11 +3,18 @@ import flet as ft
 def main(page: ft.Page):
     page.padding = 0
     
-    # Esta versión es la más compatible y sencilla
-    def crear_boton(texto, icono_nombre):
+    # Usamos content en lugar de los parámetros con nombre 'text' o 'icon'
+    # para evitar cualquier error de 'unexpected keyword'
+    def crear_boton(texto, icono):
         return ft.ElevatedButton(
-            text=texto,       # 'text' es correcto aquí
-            icon=icono_nombre, # 'icon' es correcto aquí (pasa el nombre como string)
+            content=ft.Row(
+                [
+                    ft.Icon(icono),
+                    ft.Text(texto)
+                ],
+                tight=True,
+                alignment=ft.MainAxisAlignment.CENTER
+            ),
             width=140,
             height=50,
         )
