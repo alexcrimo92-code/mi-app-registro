@@ -14,8 +14,7 @@ def main(page: ft.Page):
     page.theme_mode = ft.ThemeMode.LIGHT
     page.bgcolor = "#F8F9FA"
 
-    # Contenedor principal que ocupa toda la pantalla
-    contenedor_pantalla = ft.Container(expand=True, padding=10)
+
 
   def mostrar_menu(e=None):
     contenedor_pantalla.content = ft.Column([
