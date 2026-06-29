@@ -15,7 +15,6 @@ def main(page: ft.Page):
     page.bgcolor = "#F8F9FA"
 
 
-
 contenedor_pantalla = ft.Container(expand=True, padding=10)
     def mostrar_menu(e=None):
         contenedor_pantalla.content = ft.Column([
