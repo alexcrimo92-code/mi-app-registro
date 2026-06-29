@@ -24,6 +24,8 @@ def main(page: ft.Page):
                                 [
                                     ft.Text("Horas: 0", color="white", weight="bold"),
                                     ft.Text("Metros: 0", color="white", weight="bold"),
+                                    ft.Text("", color="white", weight="bold"),
+                                    ft.Text("", color="white", weight="bold"),
                                 ],
                                 alignment=ft.MainAxisAlignment.CENTER, # Centra horizontalmente
                             ),
