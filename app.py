@@ -25,17 +25,16 @@ def main(page: ft.Page):
                 src="fondo.jpg",
                 width=page.width,
                 height=page.height,
-                fit="cover", # Ahora sí funcionará con la versión actualizada
+                fit="cover",
             ),
-            
-            # CAPA 2: Contenedor con los botones (centrado sobre la imagen)
+            # Capa de contenido
             ft.Container(
                 content=ft.Column([
                     ft.Text("Menú Principal", size=28, weight="bold", color="white"),
-                    ft.Container(height=20),
                     ft.ElevatedButton("NUEVO REGISTRO", icon="ADD", on_click=mostrar_formulario),
                     ft.ElevatedButton("VER PARTES", icon="HISTORY", on_click=mostrar_historial),
                 ], alignment=ft.MainAxisAlignment.CENTER, horizontal_alignment=ft.CrossAxisAlignment.CENTER),
+                # AQUI ESTA EL CAMBIO:
                 alignment=ft.alignment.center, # Esto centra el contenido en el Stack
             )
         ])
