@@ -3,47 +3,45 @@ import flet as ft
 def main(page: ft.Page):
     page.padding = 0
     
-    # Usamos content en lugar de los parámetros con nombre 'text' o 'icon'
-    # para evitar cualquier error de 'unexpected keyword'
-    def crear_boton(texto, icono):
-        return ft.ElevatedButton(
-            content=ft.Row(
-                [
-                    ft.Icon(icono),
-                    ft.Text(texto)
-                ],
-                tight=True,
-                alignment=ft.MainAxisAlignment.CENTER
-            ),
-            width=140,
-            height=50,
+    # Crear un contenedor que ocupa toda la pantalla
+    # Usamos 'alignment=ft.alignment.center' que es el estándar.
+    # SI te da error 'no attribute center', cambia esa línea por:
+    # alignment=ft.alignment.Alignment(0, 0)
+    
+    contenido_centrado = ft.Container(
+        expand=True,
+        alignment=ft.alignment.center, 
+        content=ft.Column(
+            [
+                ft.Text("Menú Principal", size=33, weight="bold", color="white"),
+                ft.Container(height=20),
+                
+                # Botones (usando controles básicos para evitar errores)
+                ft.Row([
+                    ft.ElevatedButton("NUEVO"), 
+                    ft.ElevatedButton("PDF")
+                ], alignment=ft.MainAxisAlignment.CENTER),
+                
+                ft.Row([
+                    ft.ElevatedButton("HISTORIAL"), 
+                    ft.ElevatedButton("USUARIO")
+                ], alignment=ft.MainAxisAlignment.CENTER),
+                
+                ft.Row([
+                    ft.ElevatedButton("CONFIGURAR"), 
+                    ft.ElevatedButton("TOTAL")
+                ], alignment=ft.MainAxisAlignment.CENTER),
+            ],
+            alignment=ft.MainAxisAlignment.CENTER,
+            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+            tight=True
         )
-
-    menu_content = ft.Column(
-        [
-            ft.Text("Menú Principal", size=33, weight="bold", color="white"),
-            ft.Container(height=20),
-            
-            ft.Row([crear_boton("NUEVO", "add"), crear_boton("PDF", "picture_as_pdf")], 
-                   alignment=ft.MainAxisAlignment.CENTER),
-            ft.Row([crear_boton("HISTORIAL", "history"), crear_boton("USUARIO", "person")], 
-                   alignment=ft.MainAxisAlignment.CENTER),
-            ft.Row([crear_boton("CONFIGURAR", "settings"), crear_boton("TOTAL", "analytics")], 
-                   alignment=ft.MainAxisAlignment.CENTER),
-        ],
-        alignment=ft.MainAxisAlignment.CENTER,
-        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-        tight=True
     )
 
     page.add(
         ft.Stack([
             ft.Image(src="fondo.jpg", fit="cover", width=page.width, height=page.height),
-            ft.Container(
-                expand=True,
-                alignment=ft.alignment.center,
-                content=menu_content
-            )
+            contenido_centrado
         ])
     )
     page.update()
