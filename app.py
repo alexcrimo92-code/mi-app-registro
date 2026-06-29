@@ -4,8 +4,7 @@ def main(page: ft.Page):
     page.padding = 0
     
     def mostrar_menu(e=None):
-        # Todo esto debe tener 8 espacios de sangría porque está dentro de 'mostrar_menu'
-        page.clean() 
+        page.clean()
         page.add(
             ft.Stack([
                 ft.Image(
@@ -16,7 +15,8 @@ def main(page: ft.Page):
                 ),
                 ft.Container(
                     expand=True,
-                    alignment=ft.alignment.center,
+                    # Usamos strings en lugar de constantes para evitar errores de atributos
+                    alignment="center", 
                     content=ft.Column(
                         [
                             ft.Text("Menú Principal", size=28, weight="bold", color="white"),
@@ -24,16 +24,15 @@ def main(page: ft.Page):
                             ft.ElevatedButton("NUEVO REGISTRO", icon="add"),
                             ft.ElevatedButton("VER PARTES", icon="history"),
                         ],
-                        alignment=ft.MainAxisAlignment.CENTER,
-                        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                        tight=True,
+                        # Alineación mediante strings
+                        alignment="center",
+                        horizontal_alignment="center",
                     ),
                 )
             ])
         )
         page.update()
 
-    # Esto tiene 4 espacios porque está dentro de 'main'
     mostrar_menu()
 
 ft.app(target=main)
