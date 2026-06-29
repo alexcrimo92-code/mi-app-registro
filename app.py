@@ -26,7 +26,7 @@ def main(page: ft.Page):
                 width=300,
                 height=200,
                 fit="cover", 
-                border_radius=ft.border_radius.all(10),
+                border_radius=10,
             ),
             ft.Container(height=10),
             ft.Text("Menú Principal", size=28, weight="bold", color="blue"),
