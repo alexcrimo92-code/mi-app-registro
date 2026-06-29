@@ -25,6 +25,9 @@ def main(page: ft.Page):
                 src="fondo.jpg",
                 width=300,
                 height=200,
+                # En la versión 0.8.5.3, se usa ft.ImageFit.COVER
+                # Si esto falla, prueba con ft.ImageFit.CONTAIN
+                fit=ft.ImageFit.COVER, 
                 border_radius=ft.border_radius.all(10),
             ),
             ft.Container(height=10),
