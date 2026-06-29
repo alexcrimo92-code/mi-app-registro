@@ -38,12 +38,11 @@ def main(page: ft.Page):
                         ft.ElevatedButton("NUEVO REGISTRO", icon="ADD", on_click=mostrar_formulario),
                         ft.ElevatedButton("VER PARTES", icon="HISTORY", on_click=mostrar_historial),
                     ],
-                    alignment=ft.MainAxisAlignment.CENTER, # Centra verticalmente en la columna
-                    horizontal_alignment=ft.CrossAxisAlignment.CENTER # Centra horizontalmente
+                    alignment="center",            # Cambiado a string
+                    horizontal_alignment="center"  # Cambiado a string
                 ),
-                # Esto obliga al contenedor a estirarse a toda la pantalla
-                expand=True,
-                alignment=ft.alignment.center # Esto centra el contenido dentro del contenedor
+                alignment="center",                # Cambiado a string
+                expand=True
             )
         ])
         page.update()
