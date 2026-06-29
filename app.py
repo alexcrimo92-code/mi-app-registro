@@ -7,32 +7,27 @@ def main(page: ft.Page):
         page.clean()
         page.add(
             ft.Stack([
-                # Imagen original (sin opacidad)
+                # Imagen de fondo original
                 ft.Image(
                     src="fondo.jpg",
                     width=page.width,
                     height=page.height,
                     fit="cover"
                 ),
-                # Contenedor para el contenido
+                # Este contenedor obliga al contenido a centrarse en la pantalla
                 ft.Container(
                     expand=True,
-                    # Quitamos alineación total para que no interfiera con la opacidad
                     content=ft.Column(
                         [
-                            # Este contenedor vacío superior actúa como "empujador"
-                            ft.Container(expand=True), 
-                            
+                            # Aquí van tus elementos
                             ft.Text("Menú Principal", size=28, weight="bold", color="white"),
                             ft.Container(height=20),
                             ft.ElevatedButton("NUEVO REGISTRO", icon="add"),
                             ft.ElevatedButton("VER PARTES", icon="history"),
-                            
-                            # Este contenedor vacío inferior equilibra el espacio
-                            ft.Container(expand=True)
                         ],
-                        alignment="center",
-                        horizontal_alignment="center",
+                        # Estas dos líneas son las que centran el bloque entero
+                        alignment=ft.MainAxisAlignment.CENTER, 
+                        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                     ),
                 )
             ])
