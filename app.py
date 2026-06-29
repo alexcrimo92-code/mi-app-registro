@@ -44,32 +44,32 @@ def main(page: ft.Page):
                         ft.ElevatedButton(
                             content=ft.Row(
                                 [
-                                    ft.Icon(ft.icons.ADD, color="white"),
+                                    ft.Icon("add", color="white"), # Cambiado a string
                                     ft.Text("NUEVO REGISTRO", color="white", weight="bold"),
                                 ],
                                 alignment="center",
                             ),
                             style=ft.ButtonStyle(
-                                bgcolor="#005662", # Un azul oscuro/cian
+                                bgcolor="#005662",
                                 shape=ft.RoundedRectangleBorder(radius=10),
                             ),
                             width=300,
                             height=50,
                         ),
                         
-                        ft.Container(height=20), # Espacio
+                        ft.Container(height=20),
                         
                         # Botón 2: Naranja Oscuro con texto Blanco
                         ft.ElevatedButton(
                             content=ft.Row(
                                 [
-                                    ft.Icon(ft.icons.HISTORY, color="white"),
+                                    ft.Icon("history", color="white"), # Cambiado a string
                                     ft.Text("VER PARTES", color="white", weight="bold"),
                                 ],
                                 alignment="center",
                             ),
                             style=ft.ButtonStyle(
-                                bgcolor="#C85A17", # Un naranja/marrón oscuro
+                                bgcolor="#C85A17",
                                 shape=ft.RoundedRectangleBorder(radius=10),
                             ),
                             width=300,
