@@ -5,11 +5,13 @@ def main(page: ft.Page):
     
     # Creamos una función auxiliar para que los botones sean uniformes
     def crear_boton(texto, icono):
-        return ft.ElevatedButton(
-            text=texto, 
-            icon=icono, 
-            width=140, # Ancho fijo para que todos se vean iguales
-            height=50
+    return ft.ElevatedButton(
+        content=ft.Row(
+            [ft.Icon(icono), ft.Text(texto)],
+            alignment=ft.MainAxisAlignment.CENTER
+        ),
+        width=140,
+        height=50
         )
 
     # Definimos la estructura de botones en filas
