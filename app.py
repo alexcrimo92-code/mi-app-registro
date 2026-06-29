@@ -17,14 +17,33 @@ def main(page: ft.Page):
     # Contenedor principal que ocupa toda la pantalla
     contenedor_pantalla = ft.Container(expand=True, padding=10)
 
-    def mostrar_menu(e=None):
-        contenedor_pantalla.content = ft.Column([
-            ft.Text("Menú Principal", size=28, weight="bold"),
-            ft.Container(height=20),
-            ft.ElevatedButton("NUEVO REGISTRO", icon="ADD", on_click=mostrar_formulario),
-            ft.ElevatedButton("VER PARTES", icon="HISTORY", on_click=mostrar_historial)
-        ], alignment=ft.MainAxisAlignment.CENTER, horizontal_alignment=ft.CrossAxisAlignment.CENTER)
-        page.update()
+  def mostrar_menu(e=None):
+    contenedor_pantalla.content = ft.Column([
+        # --- NUEVA IMAGEN ---
+       ft.Image(
+            src="fondo.jpg",  # Flet la buscará automáticamente dentro de /assets
+            width=300,
+            height=200,
+            fit=ft.ImageFit.COVER,
+            border_radius=ft.border_radius.all(10),
+        ),
+        ft.Container(height=10), # Espacio pequeño bajo la imagen
+        ft.Text("Menú Principal", size=28, weight="bold", color="blue"),
+        ft.Container(height=20),
+        ft.ElevatedButton(
+            "NUEVO REGISTRO", 
+            icon="ADD", 
+            on_click=mostrar_formulario,
+            style=ft.ButtonStyle(padding=20)
+        ),
+        ft.ElevatedButton(
+            "VER PARTES", 
+            icon="HISTORY", 
+            on_click=mostrar_historial,
+            style=ft.ButtonStyle(padding=20)
+        )
+    ], alignment=ft.MainAxisAlignment.CENTER, horizontal_alignment=ft.CrossAxisAlignment.CENTER)
+    page.update()
 
     def mostrar_formulario(e):
         # Usamos Column con scroll para evitar problemas en pantallas pequeñas
@@ -92,4 +111,4 @@ def main(page: ft.Page):
     mostrar_menu()
 
 # Aseguramos el puerto para Render
-ft.app(target=main, view=ft.AppView.WEB_BROWSER, port=int(os.environ.get("PORT", 8080)))
+ft.app(target=main, assets_dir="assets", view=ft.AppView.WEB_BROWSER, port=int(os.environ.get("PORT", 8080)))
