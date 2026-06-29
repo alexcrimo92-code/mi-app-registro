@@ -10,24 +10,18 @@ supabase = create_client(URL, KEY)
 
 
 def main(page: ft.Page):
+    page.padding = 0  # <--- Esto elimina el marco blanco
     page.title = "Registro de Partes de Trabajo"
     page.theme_mode = ft.ThemeMode.LIGHT
     page.bgcolor = "#F8F9FA"
 
-    # Esta línea ahora tiene 4 espacios de indentación (correcta)
-   contenedor_pantalla = ft.Container(
-        expand=True, 
-        padding=0,  # Aseguramos que no haya relleno interno
-        margin=0    # Aseguramos que no haya margen externo
-    )
+    # Esta línea debe tener EXACTAMENTE 4 espacios de sangría
+    contenedor_pantalla = ft.Container(expand=True, padding=0)
 
-    # Esta línea también tiene 4 espacios, igual que la de arriba
+    # Esta función también debe tener EXACTAMENTE 4 espacios de sangría
     def mostrar_menu(e=None):
-        # 1. Aseguramos que el contenedor no tenga padding
-        contenedor_pantalla.padding = 0
-        
+        # El contenido de la función debe tener 8 espacios
         contenedor_pantalla.content = ft.Stack([
-            # CAPA 1: Imagen (sin bordes)
             ft.Image(
                 src="fondo.jpg",
                 width=page.width,
