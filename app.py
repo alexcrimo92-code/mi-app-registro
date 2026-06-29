@@ -28,7 +28,7 @@ def main(page: ft.Page):
                 # Al ponerle expand=True, obliga a ocupar todo el espacio del Stack.
                 ft.Container(
                     content=menu_content,
-                    alignment=ft.alignment.center, # Alineación absoluta al centro
+                    alignment=ft.alignment.Alignment(0, 0), # Alineación absoluta al centro
                     expand=True
                 )
             ],
