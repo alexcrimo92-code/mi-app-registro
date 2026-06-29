@@ -30,13 +30,13 @@ def main(page: ft.Page):
             # Capa 2: Contenido
             ft.Container(
                 content=ft.Column(
-                    [
-                        ft.Text("Menú Principal", size=28, weight="bold", color="white"),
-                        ft.ElevatedButton("NUEVO REGISTRO", icon="ADD", on_click=mostrar_formulario),
-                        ft.ElevatedButton("VER PARTES", icon="HISTORY", on_click=mostrar_historial),
-                    ],
-                    alignment=ft.MainAxisAlignment.CENTER,
-                    horizontal_alignment=ft.CrossAxisAlignment.CENTER
+                   [
+        ft.Text("Menú Principal", size=28, weight="bold", color="white"),
+        ft.ElevatedButton("NUEVO REGISTRO", icon="ADD", on_click=mostrar_formulario),
+        ft.ElevatedButton("VER PARTES", icon="HISTORY", on_click=mostrar_historial),
+    ],
+    alignment=ft.MainAxisAlignment.CENTER,
+    horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                 ),
                 alignment=ft.alignment.center
             )
