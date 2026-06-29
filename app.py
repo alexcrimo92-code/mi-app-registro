@@ -21,28 +21,28 @@ def main(page: ft.Page):
     # Esta función también debe tener EXACTAMENTE 4 espacios de sangría
     # Línea 22
 def mostrar_menu(e=None):
-    # Aseguramos que el contenido sea un Stack
+    # Definimos la imagen fuera para asegurarnos de que carga
+    imagen_fondo = ft.Image(
+        src="fondo.jpg",
+        fit="cover",
+        width=page.width,
+        height=page.height,
+        left=0,
+        top=0
+    )
+
     contenedor_pantalla.content = ft.Stack([
-        # 1. Imagen de fondo ocupando todo
-        ft.Image(
-            src="fondo.jpg",
-            width=page.width,
-            height=page.height,
-            fit="cover", # Esto hace que la imagen se agrande y cubra todo
-        ),
-        # 2. Contenedor para el texto y botones (sin color de fondo)
+        imagen_fondo, # Fondo
         ft.Container(
             expand=True,
-            alignment=ft.alignment.center, # Centra el contenido en pantalla
             content=ft.Column(
                 [
-                    ft.Text("Menú Principal", size=28, weight="bold", color="black"),
-                    ft.Container(height=20),
+                    ft.Text("Menú Principal", size=28, weight="bold", color="white"),
                     ft.ElevatedButton("NUEVO REGISTRO", on_click=mostrar_formulario),
                     ft.ElevatedButton("VER PARTES", on_click=mostrar_historial),
                 ],
-                alignment="center", # Centra verticalmente los elementos
-                horizontal_alignment="center" # Centra horizontalmente los elementos
+                alignment="center",
+                horizontal_alignment="center"
             )
         )
     ])
