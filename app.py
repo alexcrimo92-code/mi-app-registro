@@ -22,6 +22,7 @@ def main(page: ft.Page):
     def mostrar_menu(e=None):
         # El contenido de la función debe tener 8 espacios
         contenedor_pantalla.content = ft.Stack([
+            # CAPA 1: Imagen de fondo
             ft.Image(
                 src="fondo.jpg",
                 width=page.width,
@@ -29,19 +30,22 @@ def main(page: ft.Page):
                 fit="cover",
             ),
             
-            # CAPA 2: Contenedor que ocupa todo el espacio para poder centrar
+            # CAPA 2: Contenedor de botones (Transparente)
             ft.Container(
                 content=ft.Column(
                     [
-                        ft.Text("Menú Principal", size=28, weight="bold", color="white"),
+                        ft.Text("Menú Principal", size=28, weight="bold", color="white"), # Texto blanco para contrastar
                         ft.Container(height=20),
                         ft.ElevatedButton("NUEVO REGISTRO", icon="ADD", on_click=mostrar_formulario),
                         ft.ElevatedButton("VER PARTES", icon="HISTORY", on_click=mostrar_historial),
                     ],
-                    alignment="center",            # Cambiado a string
-                    horizontal_alignment="center"  # Cambiado a string
+                    alignment="center",
+                    horizontal_alignment="center"
                 ),
-                alignment="center",                # Cambiado a string
+                alignment="center",
+                bgcolor=ft.colors.with_opacity(0.3, "black"), # CAPA SEMITRANSPARENTE oscura para que los botones se lean bien
+                padding=20,
+                border_radius=10,
                 expand=True
             )
         ])
