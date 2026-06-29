@@ -63,8 +63,9 @@ def main(page: ft.Page):
                                 ft.Divider(),
                                 ft.Text(f"🏢 {item.get('constructora', 'N/A')}"),
                                 ft.Text(f"📍 {item.get('lugar', 'N/A')}"),
-                                ft.Text(f"⏱ {item.get('horas', '0')} hrs 
-                                ft.Text(f" 📏 {item.get('metros', '0')} m") | 🛠 {item.get('material instalado', 'N/A')}
+                             
+ft.Text(f"⏱ {item.get('horas', '0')} hrs"),
+ft.Text(f"📏 {item.get('metros', '0')} m | 🛠 {item.get('material', 'N/A')}") 
                             ], spacing=5),
 
                             padding=15
