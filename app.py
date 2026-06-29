@@ -21,71 +21,28 @@ def main(page: ft.Page):
     # Esta función también debe tener EXACTAMENTE 4 espacios de sangría
     def mostrar_menu(e=None):
         contenedor_pantalla.content = ft.Stack([
-            # 1. Imagen de fondo (más oscura para contraste)
+            # Capa 1: Fondo
             ft.Image(
                 src="fondo.jpg",
                 width=page.width,
                 height=page.height,
-                fit="cover",
-                opacity=0.4, # <--- ¡CLAVE 1! Hacemos la imagen más tenue
+                fit="cover"
             ),
-            # 2. Contenedor de control con fondo semitransparente oscuro
+            # Capa 2: Contenido
             ft.Container(
                 content=ft.Column(
-                    [
-                        # Logo y Texto (ya se ven, pero aseguramos color)
-                        ft.Text("EYFER CONST SL", size=32, weight="bold", color="white"), # <--- ¡CLAVE 2! Texto blanco
-                        ft.Text("PARTES DE TRABAJO", size=20, color="white"),
-                        ft.Container(height=40), # Espacio
-                        
-                        # --- LOS BOTONES (con alto contraste) ---
-                        
-                        # Botón 1: Azul Oscuro con texto Blanco
-                        ft.ElevatedButton(
-                            content=ft.Row(
-                                [
-                                    ft.Icon("add", color="white"), # Cambiado a string
-                                    ft.Text("NUEVO REGISTRO", color="white", weight="bold"),
-                                ],
-                                alignment="center",
-                            ),
-                            style=ft.ButtonStyle(
-                                bgcolor="#005662",
-                                shape=ft.RoundedRectangleBorder(radius=10),
-                            ),
-                            width=300,
-                            height=50,
-                        ),
-                        
-                        ft.Container(height=20),
-                        
-                        # Botón 2: Naranja Oscuro con texto Blanco
-                        ft.ElevatedButton(
-                            content=ft.Row(
-                                [
-                                    ft.Icon("history", color="white"), # Cambiado a string
-                                    ft.Text("VER PARTES", color="white", weight="bold"),
-                                ],
-                                alignment="center",
-                            ),
-                            style=ft.ButtonStyle(
-                                bgcolor="#C85A17",
-                                shape=ft.RoundedRectangleBorder(radius=10),
-                            ),
-                            width=300,
-                            height=50,
-                        ),
-                    ],
-                    alignment="center",
-                    horizontal_alignment="center",
+                   [
+        ft.Text("Menú Principal", size=28, weight="bold", color="white"),
+        ft.ElevatedButton("NUEVO REGISTRO", icon="ADD", on_click=mostrar_formulario),
+        ft.ElevatedButton("VER PARTES", icon="HISTORY", on_click=mostrar_historial),
+    ],
+    alignment=ft.MainAxisAlignment.CENTER,
+    horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                 ),
-                # ¡CLAVE 3! Fondo oscuro detrás de los botones para que resalten
-                bgcolor="rgba(0,0,0,0.6)", 
-                alignment="center",
-                expand=True,
             )
         ])
-        page.update()
+        page.update()   
+
     def mostrar_formulario(e):
         # Usamos Column con scroll para evitar problemas en pantallas pequeñas
         contenedor_pantalla.content = ft.Column([
