@@ -21,42 +21,32 @@ def main(page: ft.Page):
     # Esta función también debe tener EXACTAMENTE 4 espacios de sangría
     # Línea 22
 def mostrar_menu(e=None):
-    # Asegúrate de que TODAS estas líneas tengan 4 espacios de margen a la izquierda
+    # Aseguramos que el contenido sea un Stack
     contenedor_pantalla.content = ft.Stack([
-        # Capa 1: Fondo
+        # 1. Imagen de fondo ocupando todo
         ft.Image(
             src="fondo.jpg",
             width=page.width,
             height=page.height,
-            fit="cover"
+            fit="cover", # Esto hace que la imagen se agrande y cubra todo
         ),
-        # Capa 2: Contenido
+        # 2. Contenedor para el texto y botones (sin color de fondo)
         ft.Container(
             expand=True,
+            alignment=ft.alignment.center, # Centra el contenido en pantalla
             content=ft.Column(
                 [
-                    ft.Text("Menú Principal", size=28, weight="bold", color="white"),
+                    ft.Text("Menú Principal", size=28, weight="bold", color="black"),
                     ft.Container(height=20),
-                    ft.ElevatedButton(
-                        "NUEVO REGISTRO", 
-                        icon="add", 
-                        on_click=mostrar_formulario,
-                        style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=20))
-                    ),
-                    ft.ElevatedButton(
-                        "VER PARTES", 
-                        icon="history", 
-                        on_click=mostrar_historial,
-                        style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=20))
-                    ),
+                    ft.ElevatedButton("NUEVO REGISTRO", on_click=mostrar_formulario),
+                    ft.ElevatedButton("VER PARTES", on_click=mostrar_historial),
                 ],
-                alignment="center",
-                horizontal_alignment="center",
-            ),
+                alignment="center", # Centra verticalmente los elementos
+                horizontal_alignment="center" # Centra horizontalmente los elementos
+            )
         )
     ])
-    page.update()   
-
+    page.update()
     def mostrar_formulario(e):
         # Usamos Column con scroll para evitar problemas en pantallas pequeñas
         contenedor_pantalla.content = ft.Column([
