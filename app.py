@@ -21,27 +21,66 @@ def main(page: ft.Page):
     # Esta función también debe tener EXACTAMENTE 4 espacios de sangría
     def mostrar_menu(e=None):
         contenedor_pantalla.content = ft.Stack([
-            # 1. Imagen de fondo
+            # 1. Imagen de fondo (más oscura para contraste)
             ft.Image(
                 src="fondo.jpg",
                 width=page.width,
                 height=page.height,
                 fit="cover",
+                opacity=0.4, # <--- ¡CLAVE 1! Hacemos la imagen más tenue
             ),
-            # 2. Contenedor de control (con color sólido para probar)
+            # 2. Contenedor de control con fondo semitransparente oscuro
             ft.Container(
                 content=ft.Column(
                     [
-                        ft.Text("MENÚ PRINCIPAL", size=30, weight="bold", color="blue"), # Texto azul fuerte
-                        ft.ElevatedButton("NUEVO REGISTRO", icon="add"),
-                        ft.ElevatedButton("VER PARTES", icon="history"),
+                        # Logo y Texto (ya se ven, pero aseguramos color)
+                        ft.Text("EYFER CONST SL", size=32, weight="bold", color="white"), # <--- ¡CLAVE 2! Texto blanco
+                        ft.Text("PARTES DE TRABAJO", size=20, color="white"),
+                        ft.Container(height=40), # Espacio
+                        
+                        # --- LOS BOTONES (con alto contraste) ---
+                        
+                        # Botón 1: Azul Oscuro con texto Blanco
+                        ft.ElevatedButton(
+                            content=ft.Row(
+                                [
+                                    ft.Icon(ft.icons.ADD, color="white"),
+                                    ft.Text("NUEVO REGISTRO", color="white", weight="bold"),
+                                ],
+                                alignment="center",
+                            ),
+                            style=ft.ButtonStyle(
+                                bgcolor="#005662", # Un azul oscuro/cian
+                                shape=ft.RoundedRectangleBorder(radius=10),
+                            ),
+                            width=300,
+                            height=50,
+                        ),
+                        
+                        ft.Container(height=20), # Espacio
+                        
+                        # Botón 2: Naranja Oscuro con texto Blanco
+                        ft.ElevatedButton(
+                            content=ft.Row(
+                                [
+                                    ft.Icon(ft.icons.HISTORY, color="white"),
+                                    ft.Text("VER PARTES", color="white", weight="bold"),
+                                ],
+                                alignment="center",
+                            ),
+                            style=ft.ButtonStyle(
+                                bgcolor="#C85A17", # Un naranja/marrón oscuro
+                                shape=ft.RoundedRectangleBorder(radius=10),
+                            ),
+                            width=300,
+                            height=50,
+                        ),
                     ],
                     alignment="center",
                     horizontal_alignment="center",
                 ),
-                bgcolor="white", # Fondo blanco sólido para ver si aparecen
-                opacity=0.9,     # Casi opaco para que se vea bien
-                padding=40,
+                # ¡CLAVE 3! Fondo oscuro detrás de los botones para que resalten
+                bgcolor="rgba(0,0,0,0.6)", 
                 alignment="center",
                 expand=True,
             )
