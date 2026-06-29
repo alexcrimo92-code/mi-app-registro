@@ -19,28 +19,36 @@ def main(page: ft.Page):
 
     # Esta línea también tiene 4 espacios, igual que la de arriba
     def mostrar_menu(e=None):
+        # 1. Aseguramos que el contenedor no tenga padding
+        contenedor_pantalla.padding = 0
+        
         contenedor_pantalla.content = ft.Stack([
-            # Capa 1: Fondo
+            # CAPA 1: Imagen (sin bordes)
             ft.Image(
                 src="fondo.jpg",
                 width=page.width,
                 height=page.height,
-                fit="cover"
+                fit="cover",
             ),
-            # Capa 2: Contenido
+            
+            # CAPA 2: Contenedor que ocupa todo el espacio para poder centrar
             ft.Container(
                 content=ft.Column(
-                   [
-        ft.Text("Menú Principal", size=28, weight="bold", color="white"),
-        ft.ElevatedButton("NUEVO REGISTRO", icon="ADD", on_click=mostrar_formulario),
-        ft.ElevatedButton("VER PARTES", icon="HISTORY", on_click=mostrar_historial),
-    ],
-    alignment=ft.MainAxisAlignment.CENTER,
-    horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                    [
+                        ft.Text("Menú Principal", size=28, weight="bold", color="white"),
+                        ft.Container(height=20),
+                        ft.ElevatedButton("NUEVO REGISTRO", icon="ADD", on_click=mostrar_formulario),
+                        ft.ElevatedButton("VER PARTES", icon="HISTORY", on_click=mostrar_historial),
+                    ],
+                    alignment=ft.MainAxisAlignment.CENTER, # Centra verticalmente en la columna
+                    horizontal_alignment=ft.CrossAxisAlignment.CENTER # Centra horizontalmente
                 ),
+                # Esto obliga al contenedor a estirarse a toda la pantalla
+                expand=True,
+                alignment=ft.alignment.center # Esto centra el contenido dentro del contenedor
             )
         ])
-        page.update()   
+        page.update()
     def mostrar_formulario(e):
         # Usamos Column con scroll para evitar problemas en pantallas pequeñas
         contenedor_pantalla.content = ft.Column([
