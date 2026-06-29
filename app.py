@@ -14,10 +14,10 @@ def main(page: ft.Page):
                     height=page.height,
                     fit="cover"
                 ),
-                # El contenedor que fuerza el centrado absoluto
+                # Usamos un Container con alineación por string
                 ft.Container(
                     expand=True,
-                    alignment=ft.alignment.center, # Alineación del contenedor
+                    alignment="center", # ESTO ES UN STRING, NO DARA ERROR DE ATRIBUTO
                     content=ft.Column(
                         [
                             ft.Text("Menú Principal", size=28, weight="bold", color="white"),
@@ -25,7 +25,6 @@ def main(page: ft.Page):
                             ft.ElevatedButton("NUEVO REGISTRO", icon="add"),
                             ft.ElevatedButton("VER PARTES", icon="history"),
                         ],
-                        # Alineación dentro de la columna
                         alignment="center",
                         horizontal_alignment="center",
                         tight=True,
