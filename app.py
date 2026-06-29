@@ -25,7 +25,7 @@ def main(page: ft.Page):
                 src="fondo.jpg",
                 width=300,
                 height=200,
-                fit="cover", 
+                fit="contain", 
                 border_radius=10,
             ),
             ft.Container(height=10),
