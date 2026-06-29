@@ -13,21 +13,27 @@ def main(page: ft.Page):
                     height=page.height,
                     fit="cover"
                 ),
-                # El secreto es usar 'alignment' en el contenedor que contiene la columna
+                # El truco es este Container con alignment.center y expand=True
                 ft.Container(
                     expand=True,
-                    alignment=ft.alignment.center, # <--- Fuerza el centro absoluto
+                    alignment=ft.alignment.center, # Fuerza el centro absoluto del stack
                     content=ft.Column(
                         [
+                            ft.Row(
+                                [
+                                    ft.Text("Horas: 0", color="white", weight="bold"),
+                                    ft.Text("Metros: 0", color="white", weight="bold"),
+                                ],
+                                alignment=ft.MainAxisAlignment.CENTER,
+                            ),
                             ft.Text("Menú Principal", size=28, weight="bold", color="white"),
                             ft.Container(height=20),
                             ft.ElevatedButton("NUEVO REGISTRO", icon="add"),
                             ft.ElevatedButton("VER PARTES", icon="history"),
                         ],
-                        # Alineación interna de la columna
-                        alignment="center",
-                        horizontal_alignment="center",
-                        tight=True, # Importante: Columna ajustada a su contenido
+                        alignment=ft.MainAxisAlignment.CENTER,
+                        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                        tight=True, # Esto es clave para que el alignment.center funcione
                     ),
                 )
             ])
