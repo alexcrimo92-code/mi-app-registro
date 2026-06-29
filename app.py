@@ -7,36 +7,35 @@ def main(page: ft.Page):
         page.clean()
         page.add(
             ft.Stack([
+                # Imagen de fondo original
                 ft.Image(
                     src="fondo.jpg",
                     width=page.width,
                     height=page.height,
                     fit="cover"
                 ),
-                # Contenedor principal que centra todo
+                # Este contenedor obliga al contenido a centrarse en la pantalla
                 ft.Container(
                     expand=True,
-                    alignment="center", # Alineación absoluta al centro
                     content=ft.Column(
                         [
-                            # Fila de datos (Horas y Metros)
+                            # Nueva fila de datos agregada
                             ft.Row(
                                 [
-                                    ft.Container(content=ft.Text("Total Horas: 0", color="white"), padding=10),
-                                    ft.Container(content=ft.Text("Total Metros: 0", color="white"), padding=10),
+                                    ft.Text("Horas: 0", color="white", weight="bold"),
+                                    ft.Text("Metros: 0", color="white", weight="bold"),
                                 ],
-                                alignment="center",
+                                alignment=ft.MainAxisAlignment.CENTER, # Centra horizontalmente
                             ),
-                            
-                            # Título y Botones
+                            # Elementos originales
                             ft.Text("Menú Principal", size=28, weight="bold", color="white"),
                             ft.Container(height=20),
                             ft.ElevatedButton("NUEVO REGISTRO", icon="add"),
                             ft.ElevatedButton("VER PARTES", icon="history"),
                         ],
-                        alignment="center",
-                        horizontal_alignment="center",
-                        tight=True, # Mantiene el bloque compacto para centrarse mejor
+                        # Estas líneas mantienen el centrado vertical y horizontal del bloque completo
+                        alignment=ft.MainAxisAlignment.CENTER, 
+                        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                     ),
                 )
             ])
