@@ -20,24 +20,28 @@ def main(page: ft.Page):
     # Esta línea también tiene 4 espacios, igual que la de arriba
     def mostrar_menu(e=None):
         contenedor_pantalla.content = ft.Stack([
-            # CAPA 1: Imagen de fondo (ocupa todo el espacio)
+            # Capa 1: Fondo
             ft.Image(
                 src="fondo.jpg",
                 width=page.width,
                 height=page.height,
-                fit="cover",
+                fit="cover"
             ),
-            # Capa de contenido
+            # Capa 2: Contenido
             ft.Container(
-                content=ft.Column([
-                    ft.Text("Menú Principal", size=28, weight="bold", color="white"),
-                    ft.ElevatedButton("NUEVO REGISTRO", icon="ADD", on_click=mostrar_formulario),
-                    ft.ElevatedButton("VER PARTES", icon="HISTORY", on_click=mostrar_historial),
-                ], alignment=ft.MainAxisAlignment.CENTER,
-    horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                content=ft.Column(
+                    [
+                        ft.Text("Menú Principal", size=28, weight="bold", color="white"),
+                        ft.ElevatedButton("NUEVO REGISTRO", icon="ADD", on_click=mostrar_formulario),
+                        ft.ElevatedButton("VER PARTES", icon="HISTORY", on_click=mostrar_historial),
+                    ],
+                    alignment=ft.MainAxisAlignment.CENTER,
+                    horizontal_alignment=ft.CrossAxisAlignment.CENTER
+                ),
+                alignment=ft.alignment.center
             )
         ])
-        page.update()    
+        page.update()   
     def mostrar_formulario(e):
         # Usamos Column con scroll para evitar problemas en pantallas pequeñas
         contenedor_pantalla.content = ft.Column([
