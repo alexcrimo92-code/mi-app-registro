@@ -69,7 +69,7 @@ def main(page: ft.Page):
                 ft.Text(f"📏 {item.get('metros', '0')} m"),
                 ft.Text("|"),
                 # Asegúrate de que el nombre aquí coincida exactamente con tu columna en Supabase
-                ft.Text(f"🛠 {item.get('material instalado', 'N/A')}") 
+                ft.Text(f"🛠 {item.get('material_instalado', 'N/A')}") 
             ])
         ], spacing=5),
         padding=15
