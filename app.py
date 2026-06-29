@@ -21,29 +21,24 @@ def main(page: ft.Page):
     # Esta función también debe tener EXACTAMENTE 4 espacios de sangría
     # Línea 22
 def mostrar_menu(e=None):
-    # Definimos la imagen fuera para asegurarnos de que carga
-    imagen_fondo = ft.Image(
-        src="fondo.jpg",
-        fit="cover",
-        width=page.width,
-        height=page.height,
-        left=0,
-        top=0
-    )
-
+    # Vamos a usar un color de fondo sólido para ver si el Stack carga
+    contenedor_pantalla.bgcolor = "red" 
+    
     contenedor_pantalla.content = ft.Stack([
-        imagen_fondo, # Fondo
-        ft.Container(
-            expand=True,
-            content=ft.Column(
-                [
-                    ft.Text("Menú Principal", size=28, weight="bold", color="white"),
-                    ft.ElevatedButton("NUEVO REGISTRO", on_click=mostrar_formulario),
-                    ft.ElevatedButton("VER PARTES", on_click=mostrar_historial),
-                ],
-                alignment="center",
-                horizontal_alignment="center"
-            )
+        # Usamos una imagen de internet para probar si el motor de renderizado funciona
+        ft.Image(
+            src="https://picsum.photos/400/800",
+            width=page.width,
+            height=page.height,
+            fit="cover"
+        ),
+        ft.Column(
+            [
+                ft.Text("PRUEBA DE CARGA", size=30, color="white"),
+                ft.ElevatedButton("BOTÓN PRUEBA")
+            ],
+            alignment="center",
+            horizontal_alignment="center"
         )
     ])
     page.update()
