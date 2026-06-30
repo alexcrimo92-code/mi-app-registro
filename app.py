@@ -62,9 +62,9 @@ def main(page: ft.Page):
             return ft.Container(
                 content=ft.TextField(label=label, border=ft.InputBorder.NONE),
                 padding=10,
-                bgcolor=ft.colors.WHITE70,
+                bgcolor="white70",  # Cambiado de ft.colors.WHITE70 a string
                 border_radius=10,
-                shadow=ft.BoxShadow(spread_radius=1, blur_radius=3, color=ft.colors.BLACK12)
+                shadow=ft.BoxShadow(spread_radius=1, blur_radius=3, color="black12") # Cambiado de ft.colors.BLACK12 a string
             )
 
         # Construcción del formulario
