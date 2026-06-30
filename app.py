@@ -72,7 +72,7 @@ def main(page: ft.Page):
                                 ft.Row([
                                     ft.Text(f"📏 {item.get('metros', '0')} m"),
                                     ft.Text("|"),
-                                    ft.Text(f"🛠 {item.get('material _instalado', '')}") 
+                                    ft.Text(f"🛠 {item.get('material_instalado', '')}") 
                                 ])
                             ], spacing=5),
                             padding=15
