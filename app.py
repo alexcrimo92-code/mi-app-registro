@@ -57,8 +57,7 @@ def main(page: ft.Page):
             icon="calendar_month",
             on_click=lambda _: date_picker.pick_date() # <--- ¡IMPORTANTE! Esto abre el calendario
         )
-        # 2. Función auxiliar para crear inputs con estilo de tarjeta
-        def crear_input_estilizado(label, icon=None):
+        # 2. Función auxiliar para crear inputs con estilo de tarjet
         def crear_input_estilizado(label, icon=None):
         return ft.Container(
             content=ft.TextField(label=label, border=ft.InputBorder.NONE),
