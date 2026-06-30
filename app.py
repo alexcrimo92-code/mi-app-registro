@@ -78,11 +78,10 @@ def main(page: ft.Page):
             padding=20
         )
         page.update()   
-        def mostrar_historial(e):
-        # Todo este bloque debe tener 8 espacios (o 2 tabs) de indentación
-        try:
+        def mostrar_historial(e): # <--- Nivel 1 (dentro de main)
+        try:                  # <--- Nivel 2 (4 espacios de sangría)
             response = supabase.table("datos_app").select("*").execute()
-            tarjetas = []
+            tarjetas = []     # <--- Nivel 3 (8 espacios de sangría)
             for item in response.data:
                 tarjetas.append(
                     ft.Card(
