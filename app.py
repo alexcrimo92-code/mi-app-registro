@@ -13,7 +13,19 @@ def main(page: ft.Page):
 
     # Contenedor principal para cambiar de pantalla
     contenedor_pantalla = ft.Container(expand=True)
+    page.add(contenedor_pantalla)
 
+    # 1. Función auxiliar (debe estar definida aquí dentro)
+    def crear_input_estilizado(label, icon=None):
+        return ft.Container(
+            content=ft.TextField(label=label, border=ft.InputBorder.NONE),
+            padding=10,
+            bgcolor="white70",
+            border_radius=10,
+            shadow=ft.BoxShadow(spread_radius=1, blur_radius=3, color="black12")
+        )
+
+    # 2. Función del Menú
     def mostrar_menu(e=None):
         menu_content = ft.Column(
             [
@@ -30,12 +42,12 @@ def main(page: ft.Page):
         
         contenedor_pantalla.content = ft.Stack([
             ft.Image(src="fondo.jpg", fit="cover", width=page.width, height=page.height),
-            ft.Container(content=menu_content, alignment=ft.alignment.Alignment(0, 0), expand=True)
+            ft.Container(content=menu_content, alignment=ft.alignment.center, expand=True)
         ])
         page.update()
 
+    # 3. Función del Formulario
     def mostrar_formulario(e):
-        # 1. Configuración del DatePicker
         def on_date_change(e):
             fecha_input.value = e.control.value.strftime("%d/%m/%Y")
             page.update()
@@ -49,7 +61,6 @@ def main(page: ft.Page):
         if date_picker not in page.overlay:
             page.overlay.append(date_picker)
 
-        # 2. Configuración del campo de texto
         fecha_input = ft.TextField(
             label="Fecha", 
             read_only=True, 
@@ -57,7 +68,6 @@ def main(page: ft.Page):
             on_click=lambda _: date_picker.pick_date()
         )
         
-        # 3. Construcción del formulario
         contenedor_pantalla.content = ft.Container(
             content=ft.Column([
                 ft.Text("Nuevo Registro", size=24, weight="bold"),
@@ -75,7 +85,7 @@ def main(page: ft.Page):
             ], scroll=ft.ScrollMode.AUTO, spacing=15),
             padding=20
         )
-        page.update()   
+        page.update()
     def mostrar_historial(e):
         try:
             response = supabase.table("datos_app").select("*").execute()
