@@ -35,22 +35,25 @@ def main(page: ft.Page):
         page.update()
 
     def mostrar_formulario(e):
-        contenedor_pantalla.content = ft.Column([
-            ft.Text("Nuevo Registro", size=24, weight="bold"),
-            ft.TextField(label="Fecha", value="26/06/2026"),
-            ft.TextField(label="Nº Parte"),
-            ft.TextField(label="Horas"),
-            ft.TextField(label="Metros"),
-            ft.TextField(label="Material Instalado"),
-            ft.TextField(label="Direccion"), 
-            ft.TextField(label="Constructora"),
-            ft.TextField(label="Compañero"),
-            ft.ElevatedButton("GUARDAR", icon="SAVE", on_click=mostrar_menu),
-            ft.Divider(),
-            ft.ElevatedButton("← MENÚ", icon="HOME", on_click=mostrar_menu)
-        ], scroll=ft.ScrollMode.AUTO, alignment=ft.MainAxisAlignment.START, padding=20)
+        # QUITAMOS padding=20 de la Column y lo ponemos en un Container si quieres espaciado
+        contenedor_pantalla.content = ft.Container(
+            content=ft.Column([
+                ft.Text("Nuevo Registro", size=24, weight="bold"),
+                ft.TextField(label="Fecha", value="26/06/2026"),
+                ft.TextField(label="Nº Parte"),
+                ft.TextField(label="Horas"),
+                ft.TextField(label="Metros"),
+                ft.TextField(label="Material Instalado"),
+                ft.TextField(label="Direccion"), 
+                ft.TextField(label="Constructora"),
+                ft.TextField(label="Compañero"),
+                ft.ElevatedButton("GUARDAR", icon="SAVE", on_click=mostrar_menu),
+                ft.Divider(),
+                ft.ElevatedButton("← MENÚ", icon="HOME", on_click=mostrar_menu)
+            ], scroll=ft.ScrollMode.AUTO, alignment=ft.MainAxisAlignment.START),
+            padding=20  # El padding va aquí, en el Container
+        )
         page.update()
-
     def mostrar_historial(e):
         try:
             response = supabase.table("datos_app").select("*").execute()
