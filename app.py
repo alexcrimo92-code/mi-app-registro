@@ -59,14 +59,17 @@ def main(page: ft.Page):
         )
         # 2. Función auxiliar para crear inputs con estilo de tarjeta
         def crear_input_estilizado(label, icon=None):
-            return ft.Container(
-                content=ft.TextField(label=label, border=ft.InputBorder.NONE),
-                padding=10,
-                bgcolor="white70",  # Cambiado de ft.colors.WHITE70 a string
-                border_radius=10,
-                shadow=ft.BoxShadow(spread_radius=1, blur_radius=3, color="black12") # Cambiado de ft.colors.BLACK12 a string
-            )
-
+    return ft.Container(
+        content=ft.TextField(label=label, border=ft.InputBorder.NONE),
+        padding=10,
+        bgcolor="white70",  # Usamos string en lugar de ft.colors.WHITE70
+        border_radius=10,
+        shadow=ft.BoxShadow(
+            spread_radius=1, 
+            blur_radius=3, 
+            color="black12" # Usamos string en lugar de ft.colors.BLACK12
+        )
+    )
         # Construcción del formulario
         contenedor_pantalla.content = ft.Container(
             content=ft.Column([
