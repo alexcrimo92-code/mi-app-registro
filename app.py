@@ -79,6 +79,7 @@ def main(page: ft.Page):
         )
         page.update()   
         def mostrar_historial(e):
+        # Todo este bloque debe tener 8 espacios (o 2 tabs) de indentación
         try:
             response = supabase.table("datos_app").select("*").execute()
             tarjetas = []
