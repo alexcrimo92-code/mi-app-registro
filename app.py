@@ -42,7 +42,7 @@ def main(page: ft.Page):
         
         contenedor_pantalla.content = ft.Stack([
             ft.Image(src="fondo.jpg", fit="cover", width=page.width, height=page.height),
-            ft.Container(content=menu_content, alignment=ft.alignment.center, expand=True)
+            ft.Container(content=menu_content, alignment=ft.alignment.Alignment(0, 0), expand=True)
         ])
         page.update()
 
