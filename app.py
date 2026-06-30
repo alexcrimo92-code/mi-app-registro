@@ -35,26 +35,50 @@ def main(page: ft.Page):
         page.update()
 
     def mostrar_formulario(e):
-        # QUITAMOS padding=20 de la Column y lo ponemos en un Container si quieres espaciado
+        # 1. Configuración del DatePicker
+        fecha_input = ft.TextField(label="Fecha", read_only=True, icon=ft.icons.CALENDAR_MONTH)
+        
+        def on_date_change(e):
+            fecha_input.value = e.control.value.strftime("%d/%m/%Y")
+            page.update()
+
+        date_picker = ft.DatePicker(on_change=on_date_change)
+        page.overlay.append(date_picker)
+
+        # Hacer que el campo abra el calendario al hacer clic
+        fecha_input.on_click = lambda _: date_picker.pick_date()
+
+        # 2. Función auxiliar para crear inputs con estilo de tarjeta
+        def crear_input_estilizado(label, icon=None):
+            return ft.Container(
+                content=ft.TextField(label=label, border=ft.InputBorder.NONE),
+                padding=10,
+                bgcolor=ft.colors.WHITE70,
+                border_radius=10,
+                shadow=ft.BoxShadow(spread_radius=1, blur_radius=3, color=ft.colors.BLACK12)
+            )
+
+        # Construcción del formulario
         contenedor_pantalla.content = ft.Container(
             content=ft.Column([
                 ft.Text("Nuevo Registro", size=24, weight="bold"),
-                ft.TextField(label="Fecha", value="26/06/2026"),
-                ft.TextField(label="Nº Parte"),
-                ft.TextField(label="Horas"),
-                ft.TextField(label="Metros"),
-                ft.TextField(label="Material Instalado"),
-                ft.TextField(label="Direccion"), 
-                ft.TextField(label="Constructora"),
-                ft.TextField(label="Compañero"),
+                # Campo de fecha especial
+                ft.Container(content=fecha_input, padding=10, bgcolor=ft.colors.WHITE70, border_radius=10),
+                crear_input_estilizado("Nº Parte"),
+                crear_input_estilizado("Horas"),
+                crear_input_estilizado("Metros"),
+                crear_input_estilizado("Material Instalado"),
+                crear_input_estilizado("Direccion"), 
+                crear_input_estilizado("Constructora"),
+                crear_input_estilizado("Compañero"),
                 ft.ElevatedButton("GUARDAR", icon="SAVE", on_click=mostrar_menu),
                 ft.Divider(),
                 ft.ElevatedButton("← MENÚ", icon="HOME", on_click=mostrar_menu)
-            ], scroll=ft.ScrollMode.AUTO, alignment=ft.MainAxisAlignment.START),
-            padding=20  # El padding va aquí, en el Container
+            ], scroll=ft.ScrollMode.AUTO, spacing=15),
+            padding=20
         )
-        page.update()
-    def mostrar_historial(e):
+        page.update()   
+        def mostrar_historial(e):
         try:
             response = supabase.table("datos_app").select("*").execute()
             tarjetas = []
