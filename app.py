@@ -1,7 +1,7 @@
 import os
 import flet as ft
 from supabase import create_client
-from datetime import datetime
+
 # --- CONFIGURACIÓN ---
 URL = "https://bggzywzlusinkwwkwzgj.supabase.co"
 KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJnZ3p5d3psdXNpbmt3d2t3emdqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI0MDMxNjMsImV4cCI6MjA5Nzk3OTE2M30.GtEiVvBZXeAYKap7YOK-CxNmUBHIoxxkJjVV4QyJp4c"
@@ -13,19 +13,7 @@ def main(page: ft.Page):
 
     # Contenedor principal para cambiar de pantalla
     contenedor_pantalla = ft.Container(expand=True)
-    page.add(contenedor_pantalla)
 
-    # 1. Función auxiliar (debe estar definida aquí dentro)
-    def crear_input_estilizado(label, icon=None):
-        return ft.Container(
-            content=ft.TextField(label=label, border=ft.InputBorder.NONE),
-            padding=10,
-            bgcolor="white70",
-            border_radius=10,
-            shadow=ft.BoxShadow(spread_radius=1, blur_radius=3, color="black12")
-        )
-
-    # 2. Función del Menú
     def mostrar_menu(e=None):
         menu_content = ft.Column(
             [
@@ -46,44 +34,24 @@ def main(page: ft.Page):
         ])
         page.update()
 
-    # 3. Función del Formulario
     def mostrar_formulario(e):
-        def on_date_change(e):
-            fecha_input.value = e.control.value.strftime("%d/%m/%Y")
-            page.update()
-
-        date_picker = ft.DatePicker(
-            on_change=on_date_change,
-            first_date=datetime(2026, 1, 1),
-            last_date=datetime(2026, 12, 31),
-        )
-        
-        if date_picker not in page.overlay:
-            page.overlay.append(date_picker)
-
-        fecha_input = ft.TextField(
-            label="Fecha", 
-            read_only=True, 
-            icon="calendar_month",
-            on_click=lambda _: date_picker.pick_date()
-        )
-        
+        # QUITAMOS padding=20 de la Column y lo ponemos en un Container si quieres espaciado
         contenedor_pantalla.content = ft.Container(
             content=ft.Column([
                 ft.Text("Nuevo Registro", size=24, weight="bold"),
-                ft.Container(content=fecha_input, padding=10, bgcolor="white70", border_radius=10),
-                crear_input_estilizado("Nº Parte"),
-                crear_input_estilizado("Horas"),
-                crear_input_estilizado("Metros"),
-                crear_input_estilizado("Material Instalado"),
-                crear_input_estilizado("Direccion"), 
-                crear_input_estilizado("Constructora"),
-                crear_input_estilizado("Compañero"),
-                ft.ElevatedButton("GUARDAR", icon="save", on_click=mostrar_menu),
+                ft.TextField(label="Fecha", value="26/06/2026"),
+                ft.TextField(label="Nº Parte"),
+                ft.TextField(label="Horas"),
+                ft.TextField(label="Metros"),
+                ft.TextField(label="Material Instalado"),
+                ft.TextField(label="Direccion"), 
+                ft.TextField(label="Constructora"),
+                ft.TextField(label="Compañero"),
+                ft.ElevatedButton("GUARDAR", icon="SAVE", on_click=mostrar_menu),
                 ft.Divider(),
-                ft.ElevatedButton("← MENÚ", icon="home", on_click=mostrar_menu)
-            ], scroll=ft.ScrollMode.AUTO, spacing=15),
-            padding=20
+                ft.ElevatedButton("← MENÚ", icon="HOME", on_click=mostrar_menu)
+            ], scroll=ft.ScrollMode.AUTO, alignment=ft.MainAxisAlignment.START),
+            padding=20  # El padding va aquí, en el Container
         )
         page.update()
     def mostrar_historial(e):
@@ -104,7 +72,7 @@ def main(page: ft.Page):
                                 ft.Row([
                                     ft.Text(f"📏 {item.get('metros', '0')} m"),
                                     ft.Text("|"),
-                                    ft.Text(f"🛠 {item.get('material_instalado', 'N/A')}")
+                                    ft.Text(f"🛠 {item.get('material _instalado', '')}") 
                                 ])
                             ], spacing=5),
                             padding=15
@@ -114,6 +82,7 @@ def main(page: ft.Page):
         except Exception as ex:
             tarjetas = [ft.Text(f"Error: {ex}")]
 
+        # Envolvemos todo en un Container para poder usar padding
         contenedor_pantalla.content = ft.Container(
             content=ft.Column([
                 ft.Text("Historial", size=24, weight="bold"),
