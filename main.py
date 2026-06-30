@@ -8,7 +8,7 @@ from config import (
 )
 
 # Vistas (las iremos creando)
-from views.dashboard import DashboardView
+from dashboard import DashboardView
 from views.formulario import FormularioView
 from views.historial import HistorialView
 from views.estadisticas import EstadisticasView
