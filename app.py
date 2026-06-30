@@ -82,12 +82,16 @@ def main(page: ft.Page):
         except Exception as ex:
             tarjetas = [ft.Text(f"Error: {ex}")]
 
-        contenedor_pantalla.content = ft.Column([
-            ft.Text("Historial", size=24, weight="bold"),
-            ft.ListView(controls=tarjetas, expand=True, spacing=10),
-            ft.Divider(),
-            ft.ElevatedButton("← VOLVER AL MENÚ", icon="HOME", on_click=mostrar_menu)
-        ], expand=True, padding=20)
+        # Envolvemos todo en un Container para poder usar padding
+        contenedor_pantalla.content = ft.Container(
+            content=ft.Column([
+                ft.Text("Historial", size=24, weight="bold"),
+                ft.ListView(controls=tarjetas, expand=True, spacing=10),
+                ft.Divider(),
+                ft.ElevatedButton("← VOLVER AL MENÚ", icon="HOME", on_click=mostrar_menu)
+            ], expand=True),
+            padding=20
+        )
         page.update()
 
     # Inicialización
