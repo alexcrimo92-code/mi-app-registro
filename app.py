@@ -35,7 +35,7 @@ def main(page: ft.Page):
         page.update()
 
     def mostrar_formulario(e):
-        # 1. Creamos el DatePicker (si no existe ya en la página)
+        # 1. Configuración del DatePicker
         def on_date_change(e):
             fecha_input.value = e.control.value.strftime("%d/%m/%Y")
             page.update()
@@ -46,7 +46,6 @@ def main(page: ft.Page):
             last_date=datetime(2026, 12, 31),
         )
         
-        # Añadimos al overlay solo si no está ya
         if date_picker not in page.overlay:
             page.overlay.append(date_picker)
 
@@ -55,27 +54,14 @@ def main(page: ft.Page):
             label="Fecha", 
             read_only=True, 
             icon="calendar_month",
-            on_click=lambda _: date_picker.pick_date() # <--- ¡IMPORTANTE! Esto abre el calendario
+            on_click=lambda _: date_picker.pick_date()
         )
-        # 2. Función auxiliar para crear inputs con estilo de tarjet
-        def crear_input_estilizado(label, icon=None):
-        return ft.Container(
-            content=ft.TextField(label=label, border=ft.InputBorder.NONE),
-            padding=10,
-            bgcolor="white70",
-            border_radius=10,
-            shadow=ft.BoxShadow(
-                spread_radius=1, 
-                blur_radius=3, 
-                color="black12"
-            )
-        )
-        # Construcción del formulario
+        
+        # 3. Construcción del formulario
         contenedor_pantalla.content = ft.Container(
             content=ft.Column([
                 ft.Text("Nuevo Registro", size=24, weight="bold"),
-                # Campo de fecha especial
-                ft.Container(content=fecha_input, padding=10, bgcolor=ft.colors.WHITE70, border_radius=10),
+                ft.Container(content=fecha_input, padding=10, bgcolor="white70", border_radius=10),
                 crear_input_estilizado("Nº Parte"),
                 crear_input_estilizado("Horas"),
                 crear_input_estilizado("Metros"),
@@ -83,9 +69,9 @@ def main(page: ft.Page):
                 crear_input_estilizado("Direccion"), 
                 crear_input_estilizado("Constructora"),
                 crear_input_estilizado("Compañero"),
-                ft.ElevatedButton("GUARDAR", icon="SAVE", on_click=mostrar_menu),
+                ft.ElevatedButton("GUARDAR", icon="save", on_click=mostrar_menu),
                 ft.Divider(),
-                ft.ElevatedButton("← MENÚ", icon="HOME", on_click=mostrar_menu)
+                ft.ElevatedButton("← MENÚ", icon="home", on_click=mostrar_menu)
             ], scroll=ft.ScrollMode.AUTO, spacing=15),
             padding=20
         )
