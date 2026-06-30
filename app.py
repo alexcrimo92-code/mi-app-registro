@@ -11,7 +11,7 @@ supabase = create_client(URL, KEY)
 
 def main(page: ft.Page):
     page.title = "Registro de Partes de Trabajo"
-   page.padding = 0
+    page.padding = 0
     
     # 1. Definimos el contenido (los botones)
     menu_content = ft.Column(
