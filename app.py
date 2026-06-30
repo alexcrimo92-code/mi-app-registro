@@ -1,7 +1,7 @@
 import os
 import flet as ft
 from supabase import create_client
-
+from datetime import datetime
 # --- CONFIGURACIÓN ---
 URL = "https://bggzywzlusinkwwkwzgj.supabase.co"
 KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJnZ3p5d3psdXNpbmt3d2t3emdqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI0MDMxNjMsImV4cCI6MjA5Nzk3OTE2M30.GtEiVvBZXeAYKap7YOK-CxNmUBHIoxxkJjVV4QyJp4c"
@@ -35,19 +35,28 @@ def main(page: ft.Page):
         page.update()
 
     def mostrar_formulario(e):
-        # 1. Configuración del DatePicker
-        fecha_input = ft.TextField(label="Fecha", read_only=True, icon=ft.icons.CALENDAR_MONTH)
-        
+        # 1. Creamos el DatePicker (si no existe ya en la página)
         def on_date_change(e):
             fecha_input.value = e.control.value.strftime("%d/%m/%Y")
             page.update()
 
-        date_picker = ft.DatePicker(on_change=on_date_change)
-        page.overlay.append(date_picker)
+        date_picker = ft.DatePicker(
+            on_change=on_date_change,
+            first_date=datetime(2026, 1, 1),
+            last_date=datetime(2026, 12, 31),
+        )
+        
+        # Añadimos al overlay solo si no está ya
+        if date_picker not in page.overlay:
+            page.overlay.append(date_picker)
 
-        # Hacer que el campo abra el calendario al hacer clic
-        fecha_input.on_click = lambda _: date_picker.pick_date()
-
+        # 2. Configuración del campo de texto
+        fecha_input = ft.TextField(
+            label="Fecha", 
+            read_only=True, 
+            icon="calendar_month",
+            on_click=lambda _: date_picker.pick_date() # <--- ¡IMPORTANTE! Esto abre el calendario
+        )
         # 2. Función auxiliar para crear inputs con estilo de tarjeta
         def crear_input_estilizado(label, icon=None):
             return ft.Container(
