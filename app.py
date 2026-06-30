@@ -78,10 +78,10 @@ def main(page: ft.Page):
             padding=20
         )
         page.update()   
-        def mostrar_historial(e): # <--- Nivel 1 (dentro de main)
-        try:                  # <--- Nivel 2 (4 espacios de sangría)
+    def mostrar_historial(e):
+        try:
             response = supabase.table("datos_app").select("*").execute()
-            tarjetas = []     # <--- Nivel 3 (8 espacios de sangría)
+            tarjetas = []
             for item in response.data:
                 tarjetas.append(
                     ft.Card(
@@ -96,7 +96,7 @@ def main(page: ft.Page):
                                 ft.Row([
                                     ft.Text(f"📏 {item.get('metros', '0')} m"),
                                     ft.Text("|"),
-                                    ft.Text(f"🛠 {item.get('material _instalado', 'N/A')}") 
+                                    ft.Text(f"🛠 {item.get('material_instalado', 'N/A')}")
                                 ])
                             ], spacing=5),
                             padding=15
@@ -106,7 +106,6 @@ def main(page: ft.Page):
         except Exception as ex:
             tarjetas = [ft.Text(f"Error: {ex}")]
 
-        # Envolvemos todo en un Container para poder usar padding
         contenedor_pantalla.content = ft.Container(
             content=ft.Column([
                 ft.Text("Historial", size=24, weight="bold"),
